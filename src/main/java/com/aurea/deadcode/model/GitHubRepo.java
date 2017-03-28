@@ -67,6 +67,14 @@ public class GitHubRepo {
 
     public Date getAddedDate() { return addedDate; }
 
+    public Date getProcessingCompletionDate() {
+        return processingCompletionDate;
+    }
+
+    public Date getProcessingFailureDate() {
+        return processingFailureDate;
+    }
+
     public boolean isProcessing() {
         return this.status == Status.PROCESSING;
     }
@@ -77,7 +85,7 @@ public class GitHubRepo {
 
     public void setCompleted() {
         this.status = Status.COMPLETED;
-        this.processingFailureDate = new Date();
+        this.processingCompletionDate = new Date();
     }
 
     public void setFailed() {

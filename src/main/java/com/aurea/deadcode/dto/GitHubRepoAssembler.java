@@ -32,7 +32,9 @@ public class GitHubRepoAssembler {
                 repo.getName(),
                 repo.getUrl().toString(),
                 repo.getStatus(),
-                repo.getAddedDate()
+                repo.getAddedDate(),
+                repo.getProcessingCompletionDate(),
+                repo.getProcessingFailureDate()
         );
     }
 }
