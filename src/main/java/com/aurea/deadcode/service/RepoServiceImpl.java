@@ -7,6 +7,7 @@ import com.aurea.deadcode.exception.RepositoryAlreadyExistsException;
 import com.aurea.deadcode.exception.RepositoryNotFoundException;
 import com.aurea.deadcode.model.GitHubRepo;
 import com.aurea.deadcode.repository.RepoRepository;
+import com.aurea.deadcode.service.integration.RepositoryProcessingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -24,12 +25,15 @@ public class RepoServiceImpl implements RepoService {
     @Autowired
     private GitHubRepoAssembler repoAssembler;
 
+    @Autowired
+    private RepositoryProcessingService processingService;
+
     @Override
     public Long addNewRepo(GitHubRepoDTO repoDTO) {
         GitHubRepo repo = repoAssembler.fromDTO(repoDTO);
         repoUrlMustBeUnique(repo);
         GitHubRepo savedRepo = repoRepository.save(repo);
-        runProcessingFlow(savedRepo.getId());
+        processingService.runProcessing(savedRepo);
         return savedRepo.getId();
     }
 

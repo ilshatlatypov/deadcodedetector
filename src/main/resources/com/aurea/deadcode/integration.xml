@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:int="http://www.springframework.org/schema/integration"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <int:gateway default-request-channel="processingInitiationChannel"
+                 service-interface="com.aurea.deadcode.service.integration.RepositoryProcessingService"
+                 error-channel="errorChannel"/>
+    <int:channel id="processingInitiationChannel"/>
+    <int:channel id="errorChannel"/>
+
+    <int:service-activator input-channel="errorChannel" ref="processingErrorHandler"/>
+    <bean id="processingErrorHandler" class="com.aurea.deadcode.service.integration.ProcessingErrorHandler"/>
+
+    <int:transformer input-channel="processingInitiationChannel"
+                     expression="new com.aurea.deadcode.service.integration.GitHubRepoPayload(payload.getId(), payload.getUrl().toString())"
+                     output-channel="processingStatusSetterChannel"/>
+    <int:channel id="processingStatusSetterChannel"/>
+
+    <int:service-activator input-channel="processingStatusSetterChannel"
+                           ref="processingStatusSetter"
+                           output-channel="processingStatusFilterChannel"/>
+    <bean id="processingStatusSetter" class="com.aurea.deadcode.service.integration.ProcessingStatusSetter"/>
+    <int:channel id="processingStatusFilterChannel"/>
+
+    <int:filter input-channel="processingStatusFilterChannel"
+                ref="alreadyProcessingFilter"
+                output-channel="gitHubIntegrationServiceChannel"/>
+    <bean id="alreadyProcessingFilter" class="com.aurea.deadcode.service.integration.AlreadyProcessingFilter"/>
+    <int:channel id="gitHubIntegrationServiceChannel"/>
+
+    <int:service-activator input-channel="gitHubIntegrationServiceChannel"
+                           ref="gitHubIntegrationService"
+                           output-channel="processingCompletedChannel"
+    />
+    <bean class="com.aurea.deadcode.service.integration.GitHubIntegrationServiceImpl" name="gitHubIntegrationService"/>
+    <int:channel id="processingCompletedChannel"/>
+
+    <int:service-activator input-channel="processingCompletedChannel"
+                           ref="completedStatusSetter"/>
+    <bean id="completedStatusSetter" class="com.aurea.deadcode.service.integration.CompletedStatusSetter"/>
+
+</beans>

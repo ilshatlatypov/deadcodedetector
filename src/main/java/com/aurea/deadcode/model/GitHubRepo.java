@@ -29,6 +29,12 @@ public class GitHubRepo {
     @Column(nullable = false)
     private Date addedDate;
 
+    @Column
+    private Date processingCompletionDate;
+
+    @Column
+    private Date processingFailureDate;
+
     private GitHubRepo() {}
 
     public GitHubRepo(String name, GitHubRepoURL url) {
@@ -60,4 +66,22 @@ public class GitHubRepo {
     }
 
     public Date getAddedDate() { return addedDate; }
+
+    public boolean isProcessing() {
+        return this.status == Status.PROCESSING;
+    }
+
+    public void setProcessing() {
+        this.status = Status.PROCESSING;
+    }
+
+    public void setCompleted() {
+        this.status = Status.COMPLETED;
+        this.processingFailureDate = new Date();
+    }
+
+    public void setFailed() {
+        this.status = Status.FAILED;
+        this.processingFailureDate = new Date();
+    }
 }
