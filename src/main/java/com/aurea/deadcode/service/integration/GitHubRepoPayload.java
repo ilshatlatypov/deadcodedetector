@@ -29,4 +29,8 @@ public class GitHubRepoPayload {
     public boolean isAlreadyProcessing() {
         return alreadyProcessing;
     }
+
+    public String toString() {
+        return String.format("[id=%d, url=%s]", id, url);
+    }
 }

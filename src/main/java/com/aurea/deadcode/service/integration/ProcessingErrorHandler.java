@@ -18,14 +18,15 @@ public class ProcessingErrorHandler {
     private RepoRepository repoRepository;
 
     public void handleFailure(Message<MessageHandlingException> message) {
-        GitHubRepoPayload repoPayload = (GitHubRepoPayload) message.getPayload().getFailedMessage().getPayload();
+        MessageHandlingException exception = message.getPayload();
+        GitHubRepoPayload repoPayload = (GitHubRepoPayload) exception.getFailedMessage().getPayload();
 
         Long repoId = repoPayload.getId();
         GitHubRepo repo = repoRepository.findOne(repoId);
         repo.setFailed();
         repoRepository.save(repo);
 
-        String reason = message.getPayload().getCause().getMessage();
-        LOGGER.error("Processing failed for repository []. Reason: " + reason);
+        Throwable actualException = exception.getCause();
+        LOGGER.error(String.format("Processing failed for repository [%s]", repoPayload), actualException);
     }
 }
