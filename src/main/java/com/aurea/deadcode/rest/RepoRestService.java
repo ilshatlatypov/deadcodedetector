@@ -58,4 +58,12 @@ public class RepoRestService {
         repoService.stopProcessing(id);
         return ResponseEntity.accepted().build();
     }
+
+    // 204 or 202 ?
+    // 404
+    @RequestMapping(method = RequestMethod.DELETE, path = "/{id}")
+    public ResponseEntity<?> removeRepo(@PathVariable Long id) {
+        repoService.removeRepo(id);
+        return ResponseEntity.noContent().build();
+    }
 }

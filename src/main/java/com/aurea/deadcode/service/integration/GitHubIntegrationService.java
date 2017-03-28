@@ -5,4 +5,6 @@ package com.aurea.deadcode.service.integration;
  */
 public interface GitHubIntegrationService {
     GitHubRepoPayload fetchRepositorySources(GitHubRepoPayload repoPayload);
+
+    void deleteRepositorySources(Long repoId);
 }

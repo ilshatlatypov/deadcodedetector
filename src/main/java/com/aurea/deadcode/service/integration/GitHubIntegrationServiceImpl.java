@@ -44,6 +44,14 @@ public class GitHubIntegrationServiceImpl implements GitHubIntegrationService {
         return repoPayload;
     }
 
+    @Override
+    public void deleteRepositorySources(Long repoId) {
+         File dir = getDirForRepo(repoId);
+         if (dir.exists()) {
+             deleteDir(dir);
+         }
+    }
+
     private File getDirForRepo(Long repoId) {
         String dirName = DeadCodeDetectorApplication.ROOT + "/" + REPOSITORIES_DIR_NAME + "/" + repoId;
         return new File(dirName);
@@ -59,7 +67,7 @@ public class GitHubIntegrationServiceImpl implements GitHubIntegrationService {
         }
     }
 
-    private void deleteDir(File dir) {
+    public void deleteDir(File dir) {
         LOGGER.debug("Deleting directory " + dir);
         try {
             FileUtils.deleteDirectory(dir);
@@ -91,6 +99,5 @@ public class GitHubIntegrationServiceImpl implements GitHubIntegrationService {
         } catch (GitAPIException e) {
             throw new RuntimeException("Could not pull repository to directory " + dir.getAbsolutePath());
         }
-
     }
 }

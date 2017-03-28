@@ -12,6 +12,8 @@ public interface RepoService {
 
     Long addNewRepo(GitHubRepoDTO repoDTO);
 
+    void removeRepo(Long id);
+
     List<GitHubRepoDetailedDTO> listRepos();
 
     void startProcessing(Long id);
