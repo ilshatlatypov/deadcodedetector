@@ -20,10 +20,11 @@ public class SwaggerConfig {
     public Docket api() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
-                .apis(RequestHandlerSelectors.any())
+                .apis(RequestHandlerSelectors.basePackage("com.aurea.deadcode.rest"))
                 .paths(PathSelectors.any())
                 .build()
-                .apiInfo(apiInfo());
+                .apiInfo(apiInfo())
+                .useDefaultResponseMessages(false);
     }
 
     private ApiInfo apiInfo() {
@@ -33,8 +34,8 @@ public class SwaggerConfig {
                 "API TOS",
                 "Terms of service",
                 new Contact("Ilshat Latypov", null, "ilshat.latypov@aurea.com"),
-                "License of API",
-                "API license URL");
+                null,
+                null);
         return apiInfo;
     }
 }

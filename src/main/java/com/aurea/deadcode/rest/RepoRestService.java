@@ -1,69 +1,60 @@
 package com.aurea.deadcode.rest;
 
-import com.aurea.deadcode.dto.GitHubRepoDetailedDTO;
 import com.aurea.deadcode.dto.GitHubRepoDTO;
-import com.aurea.deadcode.service.RepoService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.aurea.deadcode.dto.GitHubRepoDetailedDTO;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.net.URI;
 import java.util.List;
 
 /**
  * Created by ilshat on 27.03.17.
  */
-@RestController
+@Api(description = "Operations on repositories")
 @RequestMapping("repos")
-public class RepoRestService {
+public interface RepoRestService {
 
-    @Autowired
-    private RepoService repoService;
-
-    // 201
-    // 409
-    // 400
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity<?> addNewRepo(@RequestBody GitHubRepoDTO repo) {
-        Long addedRepoId = repoService.addNewRepo(repo);
-        URI location = buildLocationURI(addedRepoId);
-        return ResponseEntity.created(location).build();
-    }
+    @ApiOperation(value = "Add new repository", response = Void.class)
+    @ApiResponses({
+            @ApiResponse(code = 201, message = "Repository added"),
+            @ApiResponse(code = 400, message = "Not valid repository in request"),
+            @ApiResponse(code = 409, message = "The same repository already exists")
+    })
+    ResponseEntity<?> addNewRepo(@RequestBody GitHubRepoDTO repo);
 
-    private static URI buildLocationURI(Long addedRepoId) {
-        return ServletUriComponentsBuilder
-                    .fromCurrentRequest().path("/{id}")
-                    .buildAndExpand(addedRepoId).toUri();
-    }
-
-    // 200
     @RequestMapping(method = RequestMethod.GET)
-    public @ResponseBody List<GitHubRepoDetailedDTO> listRepos() {
-        return repoService.listRepos();
-    }
+    @ApiOperation(value = "Get list of all repositories")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "List of repositories"),
+    })
+    @ResponseBody List<GitHubRepoDetailedDTO> listRepos();
 
-    // 202
-    // 404
     @RequestMapping(method = RequestMethod.POST, path = "/{id}/processing/start")
-    public ResponseEntity<?> startProcessing(@PathVariable Long id) {
-        repoService.startProcessing(id);
-        return ResponseEntity.accepted().build();
-    }
+    @ApiOperation(value = "Start dead code detection processing for a repository")
+    @ApiResponses({
+            @ApiResponse(code = 202, message = "Repository processing is going to be started"),
+            @ApiResponse(code = 404, message = "Repository not found")
+    })
+    ResponseEntity<?> startProcessing(@PathVariable Long id);
 
-    // 202 ?
-    // 404
     @RequestMapping(method = RequestMethod.POST, path = "/{id}/processing/stop")
-    public ResponseEntity<?> stopProcessing(@PathVariable Long id) {
-        repoService.stopProcessing(id);
-        return ResponseEntity.accepted().build();
-    }
+    @ApiOperation(value = "Stop dead code detection processing for a repository")
+    @ApiResponses({
+            @ApiResponse(code = 202, message = "Repository processing is going to be stopped"),
+            @ApiResponse(code = 404, message = "Repository not found")
+    })
+    ResponseEntity<?> stopProcessing(@PathVariable Long id);
 
-    // 204 or 202 ?
-    // 404
     @RequestMapping(method = RequestMethod.DELETE, path = "/{id}")
-    public ResponseEntity<?> removeRepo(@PathVariable Long id) {
-        repoService.removeRepo(id);
-        return ResponseEntity.noContent().build();
-    }
+    @ApiOperation(value = "Remove repository")
+    @ApiResponses({
+            @ApiResponse(code = 204, message = "Repository removed"), // TODO or 202 ?
+            @ApiResponse(code = 404, message = "Repository not found")
+    })
+    ResponseEntity<?> removeRepo(@PathVariable Long id);
 }
