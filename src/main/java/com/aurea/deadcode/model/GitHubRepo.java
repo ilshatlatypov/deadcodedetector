@@ -9,7 +9,7 @@ import java.util.Date;
  * Created by ilshat on 27.03.17.
  */
 @Entity
-@Table(name = "repos")
+@Table(name = "repos", uniqueConstraints = { @UniqueConstraint(columnNames = {"url"}) })
 public class GitHubRepo {
     @Id
     @GeneratedValue

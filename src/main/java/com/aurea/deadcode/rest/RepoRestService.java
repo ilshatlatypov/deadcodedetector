@@ -21,6 +21,9 @@ public class RepoRestService {
     @Autowired
     private RepoService repoService;
 
+    // 201
+    // 409
+    // 400
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<?> addNewRepo(@RequestBody GitHubRepoDTO repo) {
         Long addedRepoId = repoService.addNewRepo(repo);
@@ -34,8 +37,25 @@ public class RepoRestService {
                     .buildAndExpand(addedRepoId).toUri();
     }
 
+    // 200
     @RequestMapping(method = RequestMethod.GET)
     public @ResponseBody List<GitHubRepoDetailedDTO> listRepos() {
         return repoService.listRepos();
+    }
+
+    // 202
+    // 404
+    @RequestMapping(method = RequestMethod.POST, path = "/{id}/processing/start")
+    public ResponseEntity<?> startProcessing(@PathVariable Long id) {
+        repoService.startProcessing(id);
+        return ResponseEntity.accepted().build();
+    }
+
+    // 202 ?
+    // 404
+    @RequestMapping(method = RequestMethod.POST, path = "/{id}/processing/stop")
+    public ResponseEntity<?> stopProcessing(@PathVariable Long id) {
+        repoService.stopProcessing(id);
+        return ResponseEntity.accepted().build();
     }
 }
