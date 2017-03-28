@@ -3,8 +3,8 @@ package com.aurea.deadcode.service;
 import com.aurea.deadcode.dto.GitHubRepoAssembler;
 import com.aurea.deadcode.dto.GitHubRepoDTO;
 import com.aurea.deadcode.dto.GitHubRepoDetailedDTO;
-import com.aurea.deadcode.exception.RepositoryAlreadyExistsException;
-import com.aurea.deadcode.exception.RepositoryNotFoundException;
+import com.aurea.deadcode.exception.ConflictException;
+import com.aurea.deadcode.exception.NotFoundException;
 import com.aurea.deadcode.model.GitHubRepo;
 import com.aurea.deadcode.repository.RepoRepository;
 import com.aurea.deadcode.service.integration.GitHubIntegrationService;
@@ -44,7 +44,9 @@ public class RepoServiceImpl implements RepoService {
     private void repoUrlMustBeUnique(GitHubRepo repo) {
         GitHubRepo repoWithSameUrl = repoRepository.findByUrl(repo.getUrl());
         if (repoWithSameUrl != null) {
-            throw new RepositoryAlreadyExistsException(repo.getUrl().toString());
+            String message = String.format("Repository with URL %s already exists with id %d",
+                    repo.getUrl().toString(), repoWithSameUrl.getId());
+            throw new ConflictException(message);
         }
     }
 
@@ -75,7 +77,7 @@ public class RepoServiceImpl implements RepoService {
 
     private void repoMustExist(Long id) {
         if (!repoRepository.exists(id)) {
-            throw new RepositoryNotFoundException(id);
+            throw new NotFoundException("Could not find repository with id " + id);
         }
     }
 

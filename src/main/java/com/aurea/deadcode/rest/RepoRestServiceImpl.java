@@ -2,13 +2,19 @@ package com.aurea.deadcode.rest;
 
 import com.aurea.deadcode.dto.GitHubRepoDTO;
 import com.aurea.deadcode.dto.GitHubRepoDetailedDTO;
+import com.aurea.deadcode.exception.ConflictException;
+import com.aurea.deadcode.exception.NotFoundException;
 import com.aurea.deadcode.service.RepoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.net.URI;
 import java.util.List;
 
@@ -50,5 +56,20 @@ public class RepoRestServiceImpl implements RepoRestService {
     public ResponseEntity<?> removeRepo(Long id) {
         repoService.removeRepo(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @ExceptionHandler({IllegalArgumentException.class})
+    void handleBadRequests(HttpServletResponse response) throws IOException {
+        response.sendError(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @ExceptionHandler({NotFoundException.class})
+    void handleNotFound(HttpServletResponse response) throws IOException {
+        response.sendError(HttpStatus.NOT_FOUND.value());
+    }
+
+    @ExceptionHandler({ConflictException.class})
+    void handleConflicts(HttpServletResponse response) throws IOException {
+        response.sendError(HttpStatus.CONFLICT.value());
     }
 }
