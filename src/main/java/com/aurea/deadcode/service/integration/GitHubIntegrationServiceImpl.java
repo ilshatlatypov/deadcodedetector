@@ -1,6 +1,7 @@
 package com.aurea.deadcode.service.integration;
 
 import com.aurea.deadcode.DeadCodeDetectorApplication;
+import com.aurea.deadcode.service.integration.message.SourceCodeReadyMessage;
 import org.apache.commons.io.FileUtils;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
@@ -18,16 +19,16 @@ import java.io.IOException;
 public class GitHubIntegrationServiceImpl implements GitHubIntegrationService {
     private static final Logger LOGGER = LoggerFactory.getLogger(GitHubIntegrationServiceImpl.class);
 
-    private static final String REPOSITORIES_DIR_NAME = "repositories";
+    private static final String SOURCES_DIR_NAME = "sources";
 
     @Override
-    public GitHubRepoPayload fetchRepositorySources(GitHubRepoPayload repoPayload) {
+    public SourceCodeReadyMessage fetchRepositorySources(GitHubRepoPayload repoPayload) {
         LOGGER.debug("Fetch sources for repository " + repoPayload);
 
         Long repoId = repoPayload.getId();
         String repoUrl = repoPayload.getUrl();
 
-        File repoDir = getDirForRepo(repoId);
+        File repoDir = getSourcesDirForRepo(repoId);
         if (repoDir.exists()) {
             try {
                 pullRepository(repoDir);
@@ -41,19 +42,19 @@ public class GitHubIntegrationServiceImpl implements GitHubIntegrationService {
             cloneRepository(repoUrl, repoDir);
         }
         LOGGER.debug("Fetching sources finished for repository " + repoPayload);
-        return repoPayload;
+        return new SourceCodeReadyMessage(repoDir.getAbsolutePath(), repoId);
     }
 
     @Override
     public void deleteRepositorySources(Long repoId) {
-         File dir = getDirForRepo(repoId);
+         File dir = getSourcesDirForRepo(repoId);
          if (dir.exists()) {
              deleteDir(dir);
          }
     }
 
-    private File getDirForRepo(Long repoId) {
-        String dirName = DeadCodeDetectorApplication.ROOT + "/" + REPOSITORIES_DIR_NAME + "/" + repoId;
+    private File getSourcesDirForRepo(Long repoId) {
+        String dirName = DeadCodeDetectorApplication.ROOT + "/" + repoId + "/" + SOURCES_DIR_NAME;
         return new File(dirName);
     }
 

@@ -34,12 +34,24 @@
 
     <int:service-activator input-channel="gitHubIntegrationServiceChannel"
                            ref="gitHubIntegrationService"
-                           output-channel="processingCompletedChannel"
+                           output-channel="sourceCodeReadyChannel"
     />
     <bean class="com.aurea.deadcode.service.integration.GitHubIntegrationServiceImpl" name="gitHubIntegrationService"/>
-    <int:channel id="processingCompletedChannel"/>
+    <int:channel id="sourceCodeReadyChannel"/>
 
-    <int:service-activator input-channel="processingCompletedChannel"
+    <int:service-activator input-channel="sourceCodeReadyChannel"
+                           ref="udbFileBuilder"
+                           output-channel="udbFileReadyChannel"/>
+    <bean id="udbFileBuilder" class="com.aurea.deadcode.service.integration.UdbFileBuilder"/>
+    <int:channel id="udbFileReadyChannel"/>
+
+    <int:service-activator input-channel="udbFileReadyChannel"
+                           ref="deadCodeFinder"
+                           output-channel="occurrencesSavedChannel"/>
+    <bean id="deadCodeFinder" class="com.aurea.deadcode.service.integration.DeadCodeFinder"/>
+    <int:channel id="occurrencesSavedChannel"/>
+
+    <int:service-activator input-channel="occurrencesSavedChannel"
                            ref="completedStatusSetter"/>
     <bean id="completedStatusSetter" class="com.aurea.deadcode.service.integration.CompletedStatusSetter"/>
 
