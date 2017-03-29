@@ -18,43 +18,43 @@ import java.util.List;
 @RequestMapping("repos")
 public interface RepoRestService {
 
-    @RequestMapping(method = RequestMethod.POST)
-    @ApiOperation(value = "Add new repository", response = Void.class)
+    @ApiOperation(value = "Add new repository")
     @ApiResponses({
             @ApiResponse(code = 201, message = "Repository added"),
             @ApiResponse(code = 400, message = "Not valid repository in request"),
             @ApiResponse(code = 409, message = "The same repository already exists")
     })
+    @RequestMapping(method = RequestMethod.POST)
     ResponseEntity<?> addNewRepo(@RequestBody GitHubRepoDTO repo);
 
-    @RequestMapping(method = RequestMethod.GET)
     @ApiOperation(value = "Get list of all repositories")
     @ApiResponses({
             @ApiResponse(code = 200, message = "List of repositories"),
     })
+    @RequestMapping(method = RequestMethod.GET)
     @ResponseBody List<GitHubRepoDetailedDTO> listRepos();
 
-    @RequestMapping(method = RequestMethod.POST, path = "/{id}/processing/start")
     @ApiOperation(value = "Start dead code detection processing for a repository")
     @ApiResponses({
             @ApiResponse(code = 202, message = "Repository processing is going to be started"),
             @ApiResponse(code = 404, message = "Repository not found")
     })
+    @RequestMapping(method = RequestMethod.POST, path = "/{id}/processing/start")
     ResponseEntity<?> startProcessing(@PathVariable Long id);
 
-    @RequestMapping(method = RequestMethod.POST, path = "/{id}/processing/stop")
     @ApiOperation(value = "Stop dead code detection processing for a repository")
     @ApiResponses({
             @ApiResponse(code = 202, message = "Repository processing is going to be stopped"),
             @ApiResponse(code = 404, message = "Repository not found")
     })
+    @RequestMapping(method = RequestMethod.POST, path = "/{id}/processing/stop")
     ResponseEntity<?> stopProcessing(@PathVariable Long id);
 
-    @RequestMapping(method = RequestMethod.DELETE, path = "/{id}")
     @ApiOperation(value = "Remove repository")
     @ApiResponses({
             @ApiResponse(code = 204, message = "Repository removed"), // TODO or 202 ?
             @ApiResponse(code = 404, message = "Repository not found")
     })
+    @RequestMapping(method = RequestMethod.DELETE, path = "/{id}")
     ResponseEntity<?> removeRepo(@PathVariable Long id);
 }

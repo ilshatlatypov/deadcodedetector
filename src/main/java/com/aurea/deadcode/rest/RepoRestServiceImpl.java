@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -43,17 +44,17 @@ public class RepoRestServiceImpl implements RepoRestService {
         return repoService.listRepos();
     }
 
-    public ResponseEntity<?> startProcessing(Long id) {
+    public ResponseEntity<?> startProcessing(@PathVariable Long id) {
         repoService.startProcessing(id);
         return ResponseEntity.accepted().build();
     }
 
-    public ResponseEntity<?> stopProcessing(Long id) {
+    public ResponseEntity<?> stopProcessing(@PathVariable Long id) {
         repoService.stopProcessing(id);
         return ResponseEntity.accepted().build();
     }
 
-    public ResponseEntity<?> removeRepo(Long id) {
+    public ResponseEntity<?> removeRepo(@PathVariable Long id) {
         repoService.removeRepo(id);
         return ResponseEntity.noContent().build();
     }
