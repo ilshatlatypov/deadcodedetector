@@ -68,7 +68,7 @@ public class GitHubIntegrationServiceImpl implements GitHubIntegrationService {
         }
     }
 
-    public void deleteDir(File dir) {
+    private void deleteDir(File dir) {
         LOGGER.debug("Deleting directory " + dir);
         try {
             FileUtils.deleteDirectory(dir);

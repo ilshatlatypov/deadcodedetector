@@ -52,7 +52,7 @@
     <int:channel id="occurrencesSavedChannel"/>
 
     <int:service-activator input-channel="occurrencesSavedChannel"
-                           ref="completedStatusSetter"/>
-    <bean id="completedStatusSetter" class="com.aurea.deadcode.service.integration.CompletedStatusSetter"/>
+                           ref="processingCompletionService"/>
+    <bean id="processingCompletionService" class="com.aurea.deadcode.service.integration.ProcessingCompletionService"/>
 
 </beans>
