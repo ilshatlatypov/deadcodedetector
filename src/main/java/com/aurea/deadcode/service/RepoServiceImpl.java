@@ -66,8 +66,11 @@ public class RepoServiceImpl implements RepoService {
 
     @Override
     public void startProcessing(Long id) {
-        repoMustExist(id);
-        runProcessingFlow(id);
+        GitHubRepo repo = repoRepository.findOne(id);
+        if (repo == null) {
+            throw new NotFoundException("Could not find repository with id " + id);
+        }
+        processingService.runProcessing(repo);
     }
 
     public void stopProcessing(Long id) {
@@ -79,10 +82,6 @@ public class RepoServiceImpl implements RepoService {
         if (!repoRepository.exists(id)) {
             throw new NotFoundException("Could not find repository with id " + id);
         }
-    }
-
-    private void runProcessingFlow(Long repoId) {
-
     }
 
     private void interruptProcessingFlow(Long id) {
