@@ -7,52 +7,52 @@
 		http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
     <int:gateway default-request-channel="processingInitiationChannel"
-                 service-interface="com.aurea.deadcode.service.integration.RepositoryProcessingService"
+                 service-interface="com.aurea.deadcode.service.flow.RepositoryProcessingService"
                  error-channel="errorChannel"/>
     <int:channel id="processingInitiationChannel"/>
     <int:channel id="errorChannel"/>
 
     <int:service-activator input-channel="errorChannel" ref="processingErrorHandler"/>
-    <bean id="processingErrorHandler" class="com.aurea.deadcode.service.integration.ProcessingErrorHandler"/>
+    <bean id="processingErrorHandler" class="com.aurea.deadcode.service.flow.ProcessingErrorHandler"/>
 
     <int:transformer input-channel="processingInitiationChannel"
-                     expression="new com.aurea.deadcode.service.integration.GitHubRepoPayload(payload.getId(), payload.getUrl().toString())"
+                     expression="new com.aurea.deadcode.service.flow.message.GitHubRepoPayload(payload.getId(), payload.getUrl().toString())"
                      output-channel="processingStatusSetterChannel"/>
     <int:channel id="processingStatusSetterChannel"/>
 
     <int:service-activator input-channel="processingStatusSetterChannel"
                            ref="processingStatusSetter"
                            output-channel="processingStatusFilterChannel"/>
-    <bean id="processingStatusSetter" class="com.aurea.deadcode.service.integration.ProcessingStatusSetter"/>
+    <bean id="processingStatusSetter" class="com.aurea.deadcode.service.flow.ProcessingStatusSetter"/>
     <int:channel id="processingStatusFilterChannel"/>
 
     <int:filter input-channel="processingStatusFilterChannel"
                 ref="alreadyProcessingFilter"
                 output-channel="getSourceCodeChannel"/>
-    <bean id="alreadyProcessingFilter" class="com.aurea.deadcode.service.integration.AlreadyProcessingFilter"/>
+    <bean id="alreadyProcessingFilter" class="com.aurea.deadcode.service.flow.AlreadyProcessingFilter"/>
     <int:channel id="getSourceCodeChannel"/>
 
     <int:service-activator input-channel="getSourceCodeChannel"
                            ref="sourceCodeDownloadService"
                            output-channel="sourceCodeReadyChannel"
     />
-    <bean class="com.aurea.deadcode.service.integration.SourceCodeDownloadService" name="sourceCodeDownloadService"/>
+    <bean class="com.aurea.deadcode.service.flow.SourceCodeDownloadService" name="sourceCodeDownloadService"/>
     <int:channel id="sourceCodeReadyChannel"/>
 
     <int:service-activator input-channel="sourceCodeReadyChannel"
                            ref="udbFileBuilder"
                            output-channel="udbFileReadyChannel"/>
-    <bean id="udbFileBuilder" class="com.aurea.deadcode.service.integration.UdbFileBuilder"/>
+    <bean id="udbFileBuilder" class="com.aurea.deadcode.service.flow.UdbFileBuilder"/>
     <int:channel id="udbFileReadyChannel"/>
 
     <int:service-activator input-channel="udbFileReadyChannel"
                            ref="deadCodeFinder"
                            output-channel="occurrencesSavedChannel"/>
-    <bean id="deadCodeFinder" class="com.aurea.deadcode.service.integration.DeadCodeFinder"/>
+    <bean id="deadCodeFinder" class="com.aurea.deadcode.service.flow.DeadCodeFinder"/>
     <int:channel id="occurrencesSavedChannel"/>
 
     <int:service-activator input-channel="occurrencesSavedChannel"
                            ref="processingCompletionService"/>
-    <bean id="processingCompletionService" class="com.aurea.deadcode.service.integration.ProcessingCompletionService"/>
+    <bean id="processingCompletionService" class="com.aurea.deadcode.service.flow.ProcessingCompletionService"/>
 
 </beans>

@@ -1,7 +1,8 @@
-package com.aurea.deadcode.service.integration;
+package com.aurea.deadcode.service.flow;
 
 import com.aurea.deadcode.model.GitHubRepo;
 import com.aurea.deadcode.repository.RepoRepository;
+import com.aurea.deadcode.service.flow.message.GitHubRepoPayload;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

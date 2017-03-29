@@ -1,4 +1,4 @@
-package com.aurea.deadcode.service.integration;
+package com.aurea.deadcode.service.flow;
 
 import com.aurea.deadcode.model.GitHubRepo;
 

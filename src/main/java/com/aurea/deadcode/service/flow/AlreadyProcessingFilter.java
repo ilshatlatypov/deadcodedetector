@@ -1,5 +1,6 @@
-package com.aurea.deadcode.service.integration;
+package com.aurea.deadcode.service.flow;
 
+import com.aurea.deadcode.service.flow.message.GitHubRepoPayload;
 import org.springframework.integration.core.MessageSelector;
 import org.springframework.messaging.Message;
 

@@ -8,7 +8,7 @@ import com.aurea.deadcode.exception.NotFoundException;
 import com.aurea.deadcode.model.GitHubRepo;
 import com.aurea.deadcode.repository.RepoRepository;
 import com.aurea.deadcode.service.integration.GitHubIntegrationService;
-import com.aurea.deadcode.service.integration.RepositoryProcessingService;
+import com.aurea.deadcode.service.flow.RepositoryProcessingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

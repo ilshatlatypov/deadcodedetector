@@ -1,8 +1,9 @@
-package com.aurea.deadcode.service.integration;
+package com.aurea.deadcode.service.flow;
 
 import com.aurea.deadcode.DeadCodeDetectorApplication;
-import com.aurea.deadcode.service.integration.message.SourceCodeReadyMessage;
-import com.aurea.deadcode.service.integration.message.UdbFileReadyMessage;
+import com.aurea.deadcode.service.flow.message.SourceCodeReadyMessage;
+import com.aurea.deadcode.service.flow.message.UdbFileReadyMessage;
+import com.aurea.deadcode.service.integration.UnderstandIntegrationService;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

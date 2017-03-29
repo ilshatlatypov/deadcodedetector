@@ -1,4 +1,4 @@
-package com.aurea.deadcode.service.integration.message;
+package com.aurea.deadcode.service.flow.message;
 
 /**
  * Created by ilshat on 29.03.17.
