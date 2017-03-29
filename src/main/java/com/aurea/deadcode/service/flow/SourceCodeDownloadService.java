@@ -1,9 +1,9 @@
 package com.aurea.deadcode.service.flow;
 
-import com.aurea.deadcode.DeadCodeDetectorApplication;
+import com.aurea.deadcode.service.AppFileUtils;
+import com.aurea.deadcode.service.flow.message.GitHubRepoPayload;
 import com.aurea.deadcode.service.flow.message.SourceCodeReadyMessage;
 import com.aurea.deadcode.service.integration.GitHubIntegrationService;
-import com.aurea.deadcode.service.flow.message.GitHubRepoPayload;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +17,6 @@ import java.io.File;
 @Component
 public class SourceCodeDownloadService {
     private static final Logger LOGGER = LoggerFactory.getLogger(SourceCodeDownloadService.class);
-    private static final String SOURCES_DIR_NAME = "sources";
 
     @Autowired
     private GitHubIntegrationService gitHubIntegrationService;
@@ -27,16 +26,10 @@ public class SourceCodeDownloadService {
         String repoUrl = repoPayload.getUrl();
         LOGGER.debug(String.format("Download sources for repository %s via URL %s", repoId, repoUrl));
 
-        File sourcesDir = getSourcesDirForRepo(repoPayload.getId());
+        File sourcesDir = AppFileUtils.getSourceCodeDirForRepository(repoPayload.getId());
         gitHubIntegrationService.fetchRepositorySources(repoUrl, sourcesDir.getAbsolutePath());
 
         LOGGER.debug("Sources downloading finished for repository " + repoId);
         return new SourceCodeReadyMessage(sourcesDir.getAbsolutePath(), repoId);
-    }
-
-    // TODO duplicated
-    private File getSourcesDirForRepo(Long repoId) {
-        String dirName = DeadCodeDetectorApplication.ROOT + "/" + repoId + "/" + SOURCES_DIR_NAME;
-        return new File(dirName);
     }
 }
