@@ -16,6 +16,8 @@ public class CodeOccurrence {
     @Column(nullable = false)
     private CodeOccurrenceType type;
 
+    private String file;
+
     @Column(nullable = false)
     private String name;
 
@@ -34,12 +36,38 @@ public class CodeOccurrence {
 
     public CodeOccurrence() {}
 
-    public CodeOccurrence(CodeOccurrenceType type, String name, Integer line, Integer columnFrom, Integer columnTo) {
+    public CodeOccurrence(CodeOccurrenceType type, String file, String name,
+                          Integer line, Integer columnFrom, Integer columnTo) {
         this.type = type;
+        this.file = file;
         this.name = name;
         this.line = line;
         this.columnFrom = columnFrom;
         this.columnTo = columnTo;
+    }
+
+    public CodeOccurrenceType getType() {
+        return type;
+    }
+
+    public String getFile() {
+        return file;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public Integer getLine() {
+        return line;
+    }
+
+    public Integer getColumnFrom() {
+        return columnFrom;
+    }
+
+    public Integer getColumnTo() {
+        return columnTo;
     }
 
     @Override
@@ -47,6 +75,7 @@ public class CodeOccurrence {
         return "CodeOccurrence{" +
                 "id=" + id +
                 ", type=" + type +
+                ", file=" + file +
                 ", name='" + name + '\'' +
                 ", line=" + line +
                 ", columnFrom=" + columnFrom +
