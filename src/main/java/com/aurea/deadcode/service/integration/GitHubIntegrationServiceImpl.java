@@ -1,7 +1,5 @@
 package com.aurea.deadcode.service.integration;
 
-import com.aurea.deadcode.DeadCodeDetectorApplication;
-import com.aurea.deadcode.service.integration.message.SourceCodeReadyMessage;
 import org.apache.commons.io.FileUtils;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
@@ -19,45 +17,17 @@ import java.io.IOException;
 public class GitHubIntegrationServiceImpl implements GitHubIntegrationService {
     private static final Logger LOGGER = LoggerFactory.getLogger(GitHubIntegrationServiceImpl.class);
 
-    private static final String SOURCES_DIR_NAME = "sources";
-
     @Override
-    public SourceCodeReadyMessage fetchRepositorySources(GitHubRepoPayload repoPayload) {
-        LOGGER.debug("Fetch sources for repository " + repoPayload);
-
-        Long repoId = repoPayload.getId();
-        String repoUrl = repoPayload.getUrl();
-
-        File repoDir = getSourcesDirForRepo(repoId);
+    public void fetchRepositorySources(String repoUrl, String sourcesDirPath) {
+        File repoDir = new File(sourcesDirPath);
         if (repoDir.exists()) {
-            try {
-                pullRepository(repoDir);
-            } catch (IOException e) {
-                deleteDir(repoDir);
-                createDir(repoDir);
-                cloneRepository(repoUrl, repoDir);
-            }
-        } else {
-            createDir(repoDir);
-            cloneRepository(repoUrl, repoDir);
+            deleteDir(repoDir);
         }
-        LOGGER.debug("Fetching sources finished for repository " + repoPayload);
-        return new SourceCodeReadyMessage(repoDir.getAbsolutePath(), repoId);
+        createDir(repoDir);
+        cloneRepository(repoUrl, repoDir);
     }
 
-    @Override
-    public void deleteRepositorySources(Long repoId) {
-         File dir = getSourcesDirForRepo(repoId);
-         if (dir.exists()) {
-             deleteDir(dir);
-         }
-    }
-
-    private File getSourcesDirForRepo(Long repoId) {
-        String dirName = DeadCodeDetectorApplication.ROOT + "/" + repoId + "/" + SOURCES_DIR_NAME;
-        return new File(dirName);
-    }
-
+    // TODO to utils
     private void createDir(File dir) {
         LOGGER.debug("Creating directory " + dir);
         try {
@@ -68,6 +38,7 @@ public class GitHubIntegrationServiceImpl implements GitHubIntegrationService {
         }
     }
 
+    // TODO to utils
     private void deleteDir(File dir) {
         LOGGER.debug("Deleting directory " + dir);
         try {
@@ -88,17 +59,6 @@ public class GitHubIntegrationServiceImpl implements GitHubIntegrationService {
         } catch (GitAPIException e) {
             String message = String.format("Could not clone repository %s to directory %s", uri, dir.getAbsolutePath());
             throw new RuntimeException(message);
-        }
-    }
-
-    private void pullRepository(File dir) throws IOException {
-        LOGGER.debug("Pulling repository to directory " + dir);
-        try {
-            Git.open(dir)
-                    .pull()
-                    .call();
-        } catch (GitAPIException e) {
-            throw new RuntimeException("Could not pull repository to directory " + dir.getAbsolutePath());
         }
     }
 }

@@ -54,7 +54,6 @@ public class RepoServiceImpl implements RepoService {
     public void removeRepo(Long id) {
         repoMustExist(id);
         // TODO if processing - stop it
-        gitHubIntegrationService.deleteRepositorySources(id);
         repoRepository.delete(id);
     }
 

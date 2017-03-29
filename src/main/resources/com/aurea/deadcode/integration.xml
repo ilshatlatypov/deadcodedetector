@@ -28,15 +28,15 @@
 
     <int:filter input-channel="processingStatusFilterChannel"
                 ref="alreadyProcessingFilter"
-                output-channel="gitHubIntegrationServiceChannel"/>
+                output-channel="getSourceCodeChannel"/>
     <bean id="alreadyProcessingFilter" class="com.aurea.deadcode.service.integration.AlreadyProcessingFilter"/>
-    <int:channel id="gitHubIntegrationServiceChannel"/>
+    <int:channel id="getSourceCodeChannel"/>
 
-    <int:service-activator input-channel="gitHubIntegrationServiceChannel"
-                           ref="gitHubIntegrationService"
+    <int:service-activator input-channel="getSourceCodeChannel"
+                           ref="sourceCodeDownloadService"
                            output-channel="sourceCodeReadyChannel"
     />
-    <bean class="com.aurea.deadcode.service.integration.GitHubIntegrationServiceImpl" name="gitHubIntegrationService"/>
+    <bean class="com.aurea.deadcode.service.integration.SourceCodeDownloadService" name="sourceCodeDownloadService"/>
     <int:channel id="sourceCodeReadyChannel"/>
 
     <int:service-activator input-channel="sourceCodeReadyChannel"
