@@ -84,60 +84,82 @@ public class UnderstandIntegrationServiceImpl implements UnderstandIntegrationSe
             if (isEntityCalled(method)) {
                 continue;
             }
+            if (isLambda(method)) {
+                continue;
+            }
 
             CodeOccurrenceType type = CodeOccurrenceType.METHOD;
-            String pureMethodName = StringUtils.substringAfterLast(method.name(), ".");
-
-            Reference ref = getDefinitionReference(method);
-            String filename = ref.file().longname(true);
-            int line = ref.line();
-            int columnFrom = ref.column() + 1;
-            int columnTo = columnFrom + pureMethodName.length() - 1;
-            occurrences.add(new CodeOccurrence(type, filename, pureMethodName, line, columnFrom, columnTo));
+            String pureMethodName = getPureEntityName(method);
+            Reference definitionReference = getDefinitionReference(method);
+            occurrences.add(buildCodeOccurrence(type, pureMethodName, definitionReference));
         }
         return occurrences;
     }
 
+    private boolean isLambda(Entity methodEntity) {
+        return getPureEntityName(methodEntity).startsWith("(");
+    }
+
+    private String getPureEntityName(Entity entity) {
+        return StringUtils.substringAfterLast(entity.name(), ".");
+    }
+
     private List<CodeOccurrence> searchForDeadParameters(Database db) {
         List<CodeOccurrence> occurrences = new ArrayList<>();
-        Entity[] parameters = db.ents("parameter ~catch");
-        for (Entity param : parameters) {
-            if (isEntityUsed(param)) {
-                continue;
+        Entity[] classes = db.ents("type ~interface ~unresolved ~unknown");
+        for (Entity clazz : classes) {
+            for (Reference classRef : clazz.refs("~unresolved ~unknown", "method", true)) {
+                Entity method = classRef.ent();
+                if (hasDefinition(method) && definitionsOnSameLine(clazz, method)) {
+                    continue;
+                }
+
+                for (Reference methodRefs : method.refs("~unresolved ~unknown ~catch", "parameter", true)) {
+                    Entity param = methodRefs.ent();
+                    if (isEntityUsed(param)) {
+                        continue;
+                    }
+
+                    CodeOccurrenceType type = CodeOccurrenceType.PARAMETER;
+                    String paramName = param.name();
+                    Reference definitionReference = getDefinitionReference(param);
+                    occurrences.add(buildCodeOccurrence(type, paramName, definitionReference));
+                }
             }
-
-            CodeOccurrenceType type = CodeOccurrenceType.PARAMETER;
-
-            Reference ref = getDefinitionReference(param);
-            String filename = ref.file().longname(true);
-            String paramName = param.name();
-            int line = ref.line();
-            int columnFrom = ref.column() + 1;
-            int columnTo = columnFrom + paramName.length() - 1;
-            occurrences.add(new CodeOccurrence(type, filename, paramName, line, columnFrom, columnTo));
         }
         return occurrences;
     }
 
     private List<CodeOccurrence> searchForDeadVariables(Database db) {
         List<CodeOccurrence> occurrences = new ArrayList<>();
-        Entity[] privateMembers = db.ents("variable private");
-        for (Entity member : privateMembers) {
-            if (isEntityUsed(member)) {
+        Entity[] privateVariables = db.ents("variable private");
+        for (Entity var : privateVariables) {
+            if (isEntityUsed(var)) {
                 continue;
             }
 
             CodeOccurrenceType type = CodeOccurrenceType.VARIABLE;
-            String pureMemberName = StringUtils.substringAfterLast(member.name(), ".");
-
-            Reference ref = getDefinitionReference(member);
-            String filename = ref.file().longname(true);
-            int line = ref.line();
-            int columnFrom = ref.column() + 1;
-            int columnTo = columnFrom + pureMemberName.length() - 1;
-            occurrences.add(new CodeOccurrence(type, filename, pureMemberName, line, columnFrom, columnTo));
+            String pureMemberName = getPureEntityName(var);
+            Reference definitionReference = getDefinitionReference(var);
+            occurrences.add(buildCodeOccurrence(type, pureMemberName, definitionReference));
         }
         return occurrences;
+    }
+
+    private CodeOccurrence buildCodeOccurrence(CodeOccurrenceType type, String name, Reference definitionReference) {
+        String filename = definitionReference.file().longname(true);
+        int line = definitionReference.line();
+        int columnFrom = definitionReference.column() + 1;
+        int columnTo = columnFrom + name.length() - 1;
+        return new CodeOccurrence(type, filename, name, line, columnFrom, columnTo);
+    }
+
+    private boolean hasDefinition(Entity ent) {
+        return getDefinitionReference(ent) != null;
+    }
+
+    private boolean definitionsOnSameLine(Entity ent1, Entity ent2) {
+        return getDefinitionReference(ent1).line() == getDefinitionReference(ent2).line();
     }
 
     private boolean isEntityUsed(Entity ent) {
@@ -150,7 +172,7 @@ public class UnderstandIntegrationServiceImpl implements UnderstandIntegrationSe
 
     private Reference getDefinitionReference(Entity ent) {
         Reference[] defineInRefs = ent.refs("definein", null, false);
-        return defineInRefs[0];
+        return defineInRefs.length > 0 ? defineInRefs[0] : null;
     }
 
     private void makeFilePathsRelative(String sourcesDirPath, List<CodeOccurrence> deadCodeOccurrences) {

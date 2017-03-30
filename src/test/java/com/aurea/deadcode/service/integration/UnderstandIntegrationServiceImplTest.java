@@ -3,6 +3,7 @@ package com.aurea.deadcode.service.integration;
 import com.aurea.deadcode.model.CodeOccurrence;
 import com.aurea.deadcode.model.CodeOccurrenceType;
 import com.google.common.io.Files;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import java.io.File;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Created by ilshat on 29.03.17.
@@ -26,7 +28,7 @@ public class UnderstandIntegrationServiceImplTest {
 
     @Test
     public void deadMethodSearch() throws Exception {
-        final String sourcesDirName = "sources-dead-method";
+        final String sourcesDirName = "sources/dead-method";
         final CodeOccurrenceType expectedType = CodeOccurrenceType.METHOD;
         final String expectedFile = "/DeadMethodTest.java";
         final String expectedName = "notUsedPrivateMethod";
@@ -54,7 +56,7 @@ public class UnderstandIntegrationServiceImplTest {
 
     @Test
     public void deadVariableSearch() throws Exception {
-        final String sourcesDirName = "sources-dead-variable";
+        final String sourcesDirName = "sources/dead-variable";
         final CodeOccurrenceType expectedType = CodeOccurrenceType.VARIABLE;
         final String expectedFile = "/DeadVariableTest.java";
         final String expectedName = "notUsedPrivateVariable";
@@ -82,7 +84,7 @@ public class UnderstandIntegrationServiceImplTest {
 
     @Test
     public void deadParameterSearch() throws Exception {
-        final String sourcesDirName = "sources-dead-parameter";
+        final String sourcesDirName = "sources/dead-parameter";
         final CodeOccurrenceType expectedType = CodeOccurrenceType.PARAMETER;
         final String expectedFile = "/DeadParameterTest.java";
         final String expectedName = "notUsedParameter";
@@ -106,6 +108,59 @@ public class UnderstandIntegrationServiceImplTest {
         assertEquals(expectedLine, occurrence.getLine().intValue());
         assertEquals(expectedColumnFrom, occurrence.getColumnFrom().intValue());
         assertEquals(expectedColumnTo, occurrence.getColumnTo().intValue());
+    }
+
+    @Test
+    @Ignore // Scitools cannot properly determine method call as a part of lambda
+    public void shouldNotFindMethodAsDeadIfCalledFromLambda() throws Exception {
+        final String sourcesDirName = "sources/method-calledby-lambda";
+
+        String sourcesPath = getResourceAbsolutePath(sourcesDirName);
+        String udbFilePath = getUdbFilePath();
+
+        understandIntegrationService.createUdbFile(udbFilePath, sourcesPath);
+        List<CodeOccurrence> occurrences =
+                understandIntegrationService.searchForDeadCodeOccurrences(udbFilePath, sourcesPath);
+        assertTrue(occurrences.isEmpty());
+    }
+
+    @Test
+    public void shouldNotFindParameterAsDeadIfInInterface() throws Exception {
+        final String sourcesDirName = "sources/interface";
+
+        String sourcesPath = getResourceAbsolutePath(sourcesDirName);
+        String udbFilePath = getUdbFilePath();
+
+        understandIntegrationService.createUdbFile(udbFilePath, sourcesPath);
+        List<CodeOccurrence> occurrences =
+                understandIntegrationService.searchForDeadCodeOccurrences(udbFilePath, sourcesPath);
+        assertTrue(occurrences.isEmpty());
+    }
+
+    @Test
+    public void shouldNotConsiderEnumNameAsParameter() throws Exception {
+        final String sourcesDirName = "sources/enumeration";
+
+        String sourcesPath = getResourceAbsolutePath(sourcesDirName);
+        String udbFilePath = getUdbFilePath();
+
+        understandIntegrationService.createUdbFile(udbFilePath, sourcesPath);
+        List<CodeOccurrence> occurrences =
+                understandIntegrationService.searchForDeadCodeOccurrences(udbFilePath, sourcesPath);
+        assertTrue(occurrences.isEmpty());
+    }
+
+    @Test
+    public void shouldNotFindLambdaMethodAsDead() throws Exception {
+        final String sourcesDirName = "sources/lambda";
+
+        String sourcesPath = getResourceAbsolutePath(sourcesDirName);
+        String udbFilePath = getUdbFilePath();
+
+        understandIntegrationService.createUdbFile(udbFilePath, sourcesPath);
+        List<CodeOccurrence> occurrences =
+                understandIntegrationService.searchForDeadCodeOccurrences(udbFilePath, sourcesPath);
+        assertTrue(occurrences.isEmpty());
     }
 
     @SuppressWarnings("ConstantConditions")
