@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ImportResource;
 
 @SpringBootApplication
-@ImportResource("/com/aurea/deadcode/integration.xml")
+@ImportResource("classpath:/com/aurea/deadcode/processing-flow.xml")
 public class DeadCodeDetectorApplication {
 
 	public static void main(String[] args) {
