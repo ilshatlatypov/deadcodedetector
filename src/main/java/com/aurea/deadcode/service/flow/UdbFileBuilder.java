@@ -28,6 +28,9 @@ public class UdbFileBuilder {
         LOGGER.debug("Building UDB file for repository with id " + repoId);
 
         File udbDir = AppFileUtils.getUdbDirForRepository(repoId);
+        if (udbDir.exists()) {
+            AppFileUtils.deleteDirRecursively(udbDir);
+        }
         AppFileUtils.createDir(udbDir);
 
         String udbFilePath = udbDir.getAbsolutePath() + "/" + UDB_FILE_NAME;
