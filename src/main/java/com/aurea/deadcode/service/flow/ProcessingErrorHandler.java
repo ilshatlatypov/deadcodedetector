@@ -2,6 +2,7 @@ package com.aurea.deadcode.service.flow;
 
 import com.aurea.deadcode.model.GitHubRepo;
 import com.aurea.deadcode.repository.RepoRepository;
+import com.aurea.deadcode.service.AppFileUtils;
 import com.aurea.deadcode.service.flow.message.GitHubRepoPayload;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,11 +24,14 @@ public class ProcessingErrorHandler {
         GitHubRepoPayload repoPayload = (GitHubRepoPayload) exception.getFailedMessage().getPayload();
 
         Long repoId = repoPayload.getId();
+        AppFileUtils.deleteRepositoryDir(repoId);
+
         GitHubRepo repo = repoRepository.findOne(repoId);
         repo.setFailed();
         repoRepository.save(repo);
 
+        String errorMessage = String.format("Processing failed for repository [%s]", repoPayload);
         Throwable actualException = exception.getCause();
-        LOGGER.error(String.format("Processing failed for repository [%s]", repoPayload), actualException);
+        LOGGER.error(errorMessage, actualException);
     }
 }

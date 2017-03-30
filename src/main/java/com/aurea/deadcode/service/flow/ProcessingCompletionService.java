@@ -9,8 +9,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.io.File;
-
 /**
  * Created by ilshat on 28.03.17.
  */
@@ -23,13 +21,8 @@ public class ProcessingCompletionService {
 
     public void performCompletionOperations(OccurrencesSavedMessage message) {
         Long repoId = message.getId();
-        deleteRepoDir(repoId);
+        AppFileUtils.deleteRepositoryDir(repoId);
         markRepoWithCompletedStatus(repoId);
-    }
-
-    private void deleteRepoDir(Long repoId) {
-        File dir = AppFileUtils.getRepositoryDir(repoId);
-        AppFileUtils.deleteDirRecursively(dir);
     }
 
     private void markRepoWithCompletedStatus(Long repoId) {

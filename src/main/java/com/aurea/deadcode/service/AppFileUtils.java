@@ -32,6 +32,11 @@ public class AppFileUtils {
         }
     }
 
+    public static void deleteRepositoryDir(Long repoId) {
+        File repositoryDir = getRepositoryDir(repoId);
+        deleteDirRecursively(repositoryDir);
+    }
+
     public static File getRepositoryDir(Long repoId) {
         String dirName = ROOT + "/" + repoId;
         return new File(dirName);
