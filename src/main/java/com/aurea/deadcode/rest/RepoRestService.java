@@ -43,14 +43,6 @@ public interface RepoRestService {
     @RequestMapping(method = RequestMethod.POST, path = "/{id}/processing/start")
     ResponseEntity<?> startProcessing(@PathVariable Long id);
 
-    @ApiOperation(value = "Stop dead code detection processing for a repository")
-    @ApiResponses({
-            @ApiResponse(code = 202, message = "Repository processing is going to be stopped"),
-            @ApiResponse(code = 404, message = "Repository not found")
-    })
-    @RequestMapping(method = RequestMethod.POST, path = "/{id}/processing/stop")
-    ResponseEntity<?> stopProcessing(@PathVariable Long id);
-
     @ApiOperation(value = "Remove repository")
     @ApiResponses({
             @ApiResponse(code = 204, message = "Repository removed"), // TODO or 202 ?

@@ -90,19 +90,4 @@ public class RepoServiceImpl implements RepoService {
         Iterable<CodeOccurrence> occurrences = codeOccurrenceRepository.findAllByRepo(repo);
         return StreamSupport.stream(occurrences.spliterator(), false).collect(Collectors.toList());
     }
-
-    public void stopProcessing(Long id) {
-        repoMustExist(id);
-        interruptProcessingFlow(id);
-    }
-
-    private void repoMustExist(Long id) {
-        if (!repoRepository.exists(id)) {
-            throw new NotFoundException("Could not find repository with id " + id);
-        }
-    }
-
-    private void interruptProcessingFlow(Long id) {
-
-    }
 }

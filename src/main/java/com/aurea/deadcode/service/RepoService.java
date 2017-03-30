@@ -19,7 +19,5 @@ public interface RepoService {
 
     void startProcessing(Long id);
 
-    void stopProcessing(Long id);
-
     List<CodeOccurrence> getDeadCodeOccurrences(Long repoId);
 }

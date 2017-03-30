@@ -50,11 +50,6 @@ public class RepoRestServiceImpl implements RepoRestService {
         return ResponseEntity.accepted().build();
     }
 
-    public ResponseEntity<?> stopProcessing(@PathVariable Long id) {
-        repoService.stopProcessing(id);
-        return ResponseEntity.accepted().build();
-    }
-
     public ResponseEntity<?> removeRepo(@PathVariable Long id) {
         repoService.removeRepo(id);
         return ResponseEntity.noContent().build();
