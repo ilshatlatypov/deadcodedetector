@@ -28,7 +28,7 @@ public class UnderstandIntegrationServiceImplTest {
     public void deadMethodSearch() throws Exception {
         final String sourcesDirName = "sources-dead-method";
         final CodeOccurrenceType expectedType = CodeOccurrenceType.METHOD;
-        // TODO final String expectedFile = "DeadMethodTest.java";
+        final String expectedFile = "/DeadMethodTest.java";
         final String expectedName = "notUsedPrivateMethod";
         final int expectedLine = 4;
         final int expectedColumnFrom = 18;
@@ -37,14 +37,15 @@ public class UnderstandIntegrationServiceImplTest {
         String sourcesPath = getResourceAbsolutePath(sourcesDirName);
         String udbFilePath = getUdbFilePath();
 
-        File udbFile = understandIntegrationService.createUdbFile(udbFilePath, sourcesPath);
+        understandIntegrationService.createUdbFile(udbFilePath, sourcesPath);
         List<CodeOccurrence> occurrences =
-                understandIntegrationService.searchForDeadCodeOccurrences(udbFile.getAbsolutePath());
+                understandIntegrationService.searchForDeadCodeOccurrences(udbFilePath, sourcesPath);
 
         assertEquals(1, occurrences.size());
 
         CodeOccurrence occurrence = occurrences.iterator().next();
         assertEquals(expectedType, occurrence.getType());
+        assertEquals(expectedFile, occurrence.getFile());
         assertEquals(expectedName, occurrence.getName());
         assertEquals(expectedLine, occurrence.getLine().intValue());
         assertEquals(expectedColumnFrom, occurrence.getColumnFrom().intValue());
@@ -55,7 +56,7 @@ public class UnderstandIntegrationServiceImplTest {
     public void deadVariableSearch() throws Exception {
         final String sourcesDirName = "sources-dead-variable";
         final CodeOccurrenceType expectedType = CodeOccurrenceType.VARIABLE;
-        // TODO final String expectedFile = "DeadMethodTest.java";
+        final String expectedFile = "/DeadVariableTest.java";
         final String expectedName = "notUsedPrivateVariable";
         final int expectedLine = 5;
         final int expectedColumnFrom = 17;
@@ -64,14 +65,15 @@ public class UnderstandIntegrationServiceImplTest {
         String sourcesPath = getResourceAbsolutePath(sourcesDirName);
         String udbFilePath = getUdbFilePath();
 
-        File udbFile = understandIntegrationService.createUdbFile(udbFilePath, sourcesPath);
+        understandIntegrationService.createUdbFile(udbFilePath, sourcesPath);
         List<CodeOccurrence> occurrences =
-                understandIntegrationService.searchForDeadCodeOccurrences(udbFile.getAbsolutePath());
+                understandIntegrationService.searchForDeadCodeOccurrences(udbFilePath, sourcesPath);
 
         assertEquals(1, occurrences.size());
 
         CodeOccurrence occurrence = occurrences.iterator().next();
         assertEquals(expectedType, occurrence.getType());
+        assertEquals(expectedFile, occurrence.getFile());
         assertEquals(expectedName, occurrence.getName());
         assertEquals(expectedLine, occurrence.getLine().intValue());
         assertEquals(expectedColumnFrom, occurrence.getColumnFrom().intValue());
@@ -82,7 +84,7 @@ public class UnderstandIntegrationServiceImplTest {
     public void deadParameterSearch() throws Exception {
         final String sourcesDirName = "sources-dead-parameter";
         final CodeOccurrenceType expectedType = CodeOccurrenceType.PARAMETER;
-        // TODO final String expectedFile = "DeadMethodTest.java";
+        final String expectedFile = "/DeadParameterTest.java";
         final String expectedName = "notUsedParameter";
         final int expectedLine = 5;
         final int expectedColumnFrom = 46;
@@ -91,14 +93,15 @@ public class UnderstandIntegrationServiceImplTest {
         String sourcesPath = getResourceAbsolutePath(sourcesDirName);
         String udbFilePath = getUdbFilePath();
 
-        File udbFile = understandIntegrationService.createUdbFile(udbFilePath, sourcesPath);
+        understandIntegrationService.createUdbFile(udbFilePath, sourcesPath);
         List<CodeOccurrence> occurrences =
-                understandIntegrationService.searchForDeadCodeOccurrences(udbFile.getAbsolutePath());
+                understandIntegrationService.searchForDeadCodeOccurrences(udbFilePath, sourcesPath);
 
         assertEquals(1, occurrences.size());
 
         CodeOccurrence occurrence = occurrences.iterator().next();
         assertEquals(expectedType, occurrence.getType());
+        assertEquals(expectedFile, occurrence.getFile());
         assertEquals(expectedName, occurrence.getName());
         assertEquals(expectedLine, occurrence.getLine().intValue());
         assertEquals(expectedColumnFrom, occurrence.getColumnFrom().intValue());

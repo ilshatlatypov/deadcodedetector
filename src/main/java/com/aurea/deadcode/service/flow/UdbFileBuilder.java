@@ -37,9 +37,9 @@ public class UdbFileBuilder {
         String sourcesDirPath = message.getSourcesDirPath();
 
         try {
-            File udbFile = understandIntegrationService.createUdbFile(udbFilePath, sourcesDirPath);
+            understandIntegrationService.createUdbFile(udbFilePath, sourcesDirPath);
             LOGGER.debug("UDB file building finished for with id " + repoId);
-            return new UdbFileReadyMessage(udbFile.getAbsolutePath(), repoId);
+            return new UdbFileReadyMessage(udbFilePath, sourcesDirPath, repoId);
         } catch (FileNotFoundException e) {
             String errorMessage = String.format("Could not create UDB file %s for sources directory %s",
                     udbFilePath, sourcesDirPath);

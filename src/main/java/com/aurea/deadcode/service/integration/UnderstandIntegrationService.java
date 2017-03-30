@@ -13,5 +13,5 @@ public interface UnderstandIntegrationService {
 
     File createUdbFile(String udbFilePath, String sourcesDirPath) throws FileNotFoundException;
 
-    List<CodeOccurrence> searchForDeadCodeOccurrences(String udbFilePath);
+    List<CodeOccurrence> searchForDeadCodeOccurrences(String udbFilePath, String sourcesDirPath);
 }

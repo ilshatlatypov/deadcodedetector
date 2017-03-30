@@ -4,7 +4,6 @@ import com.aurea.deadcode.model.CodeOccurrence;
 import com.aurea.deadcode.model.GitHubRepo;
 import com.aurea.deadcode.repository.CodeOccurrenceRepository;
 import com.aurea.deadcode.repository.RepoRepository;
-import com.aurea.deadcode.service.utils.AppFileUtils;
 import com.aurea.deadcode.service.flow.message.OccurrencesSavedMessage;
 import com.aurea.deadcode.service.flow.message.UdbFileReadyMessage;
 import com.aurea.deadcode.service.integration.UnderstandIntegrationService;
@@ -33,12 +32,12 @@ public class DeadCodeFinder {
     public OccurrencesSavedMessage findAndSave(UdbFileReadyMessage message) {
         Long repoId = message.getRepoId();
         String udbFilePath = message.getUdbFilePath();
+        String sourcesDirPath = message.getSourcesDirPath();
         LOGGER.debug(String.format("Searching for dead code occurrences for repository %s based using UDB file %s",
                 repoId, udbFilePath));
 
         List<CodeOccurrence> deadCodeOccurrences =
-                understandIntegrationService.searchForDeadCodeOccurrences(udbFilePath);
-        makeFilePathsRelative(repoId, deadCodeOccurrences);
+                understandIntegrationService.searchForDeadCodeOccurrences(udbFilePath, sourcesDirPath);
         updateCodeOccurrences(repoId, deadCodeOccurrences);
 
         LOGGER.debug("Dead code occurrences search finished for repository with id " +  repoId);
@@ -52,13 +51,5 @@ public class DeadCodeFinder {
         deadCodeOccurrences.forEach(o -> o.setRepo(repo));
         codeOccurrenceRepository.deleteCodeOccurrencesByGitHubRepo(repo);
         codeOccurrenceRepository.save(deadCodeOccurrences);
-    }
-
-    private void makeFilePathsRelative(Long repoId, List<CodeOccurrence> deadCodeOccurrences) {
-        int repositoryDirPathLength = AppFileUtils.getSourceCodeDirForRepository(repoId).getAbsolutePath().length();
-        for (CodeOccurrence co : deadCodeOccurrences) {
-            String relativeFilePath = co.getFile().substring(repositoryDirPathLength);
-            co.setFile(relativeFilePath);
-        }
     }
 }

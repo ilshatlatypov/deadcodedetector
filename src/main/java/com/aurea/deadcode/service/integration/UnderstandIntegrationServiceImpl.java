@@ -66,12 +66,14 @@ public class UnderstandIntegrationServiceImpl implements UnderstandIntegrationSe
         while (in.read(bytes) != -1) {}
     }
 
-    public List<CodeOccurrence> searchForDeadCodeOccurrences(String udbFilePath) {
+    @Override
+    public List<CodeOccurrence> searchForDeadCodeOccurrences(String udbFilePath, String sourcesDirPath) {
         List<CodeOccurrence> occurrences = new ArrayList<>();
         Database db = databaseFactory.getDatabase(udbFilePath);
         occurrences.addAll(searchForDeadMethods(db));
         occurrences.addAll(searchForDeadParameters(db));
         occurrences.addAll(searchForDeadVariables(db));
+        makeFilePathsRelative(sourcesDirPath, occurrences);
         return occurrences;
     }
 
@@ -149,5 +151,13 @@ public class UnderstandIntegrationServiceImpl implements UnderstandIntegrationSe
     private Reference getDefinitionReference(Entity ent) {
         Reference[] defineInRefs = ent.refs("definein", null, false);
         return defineInRefs[0];
+    }
+
+    private void makeFilePathsRelative(String sourcesDirPath, List<CodeOccurrence> deadCodeOccurrences) {
+        int sourcesDirPathLength = sourcesDirPath.length();
+        for (CodeOccurrence co : deadCodeOccurrences) {
+            String relativeFilePath = co.getFile().substring(sourcesDirPathLength);
+            co.setFile(relativeFilePath);
+        }
     }
 }
