@@ -3,19 +3,14 @@ package com.aurea.deadcode.service.flow.message;
 /**
  * Created by ilshat on 28.03.17.
  */
-public class GitHubRepoPayload {
-    private Long id;
+public class GitHubRepoPayload extends RepoIdMessage {
     private String url;
     private boolean alreadyProcessing;
 
     public GitHubRepoPayload(Long id, String url) {
-        this.id = id;
+        super(id);
         this.url = url;
         this.alreadyProcessing = false;
-    }
-
-    public Long getId() {
-        return id;
     }
 
     public String getUrl() {
@@ -28,9 +23,5 @@ public class GitHubRepoPayload {
 
     public boolean isAlreadyProcessing() {
         return alreadyProcessing;
-    }
-
-    public String toString() {
-        return String.format("[id=%d, url=%s]", id, url);
     }
 }

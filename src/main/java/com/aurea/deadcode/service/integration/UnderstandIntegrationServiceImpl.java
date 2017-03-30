@@ -48,12 +48,15 @@ public class UnderstandIntegrationServiceImpl implements UnderstandIntegrationSe
             Process p = Runtime.getRuntime().exec(udbCreationCommand);
             ignoreInputStream(p);
             p.waitFor();
+            if (p.exitValue() != 0) {
+                throw new RuntimeException("UDB command finished with code " + p.exitValue());
+            }
         } catch (IOException e) {
             // TODO
             throw new RuntimeException("Cannot execute udb command", e);
         } catch (InterruptedException e) {
             // TODO
-            e.printStackTrace();
+            throw new RuntimeException("UDB file creation command interrupted", e);
         }
         return udbFile;
     }

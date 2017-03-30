@@ -22,11 +22,11 @@ public class SourceCodeDownloadService {
     private GitHubIntegrationService gitHubIntegrationService;
 
     public SourceCodeReadyMessage download(GitHubRepoPayload repoPayload) {
-        Long repoId = repoPayload.getId();
+        Long repoId = repoPayload.getRepoId();
         String repoUrl = repoPayload.getUrl();
         LOGGER.debug(String.format("Download sources for repository %s via URL %s", repoId, repoUrl));
 
-        File sourcesDir = AppFileUtils.getSourceCodeDirForRepository(repoPayload.getId());
+        File sourcesDir = AppFileUtils.getSourceCodeDirForRepository(repoId);
         gitHubIntegrationService.fetchRepositorySources(repoUrl, sourcesDir.getAbsolutePath());
 
         LOGGER.debug("Sources downloading finished for repository " + repoId);

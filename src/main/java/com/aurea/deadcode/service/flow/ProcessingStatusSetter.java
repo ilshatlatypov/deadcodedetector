@@ -24,7 +24,7 @@ public class ProcessingStatusSetter {
         boolean alreadyProcessing = false;
         processingStatusLock.lock();
         try {
-            Long repoId = repoPayload.getId();
+            Long repoId = repoPayload.getRepoId();
             GitHubRepo repo = repoRepository.findOne(repoId);
             if (!repo.isProcessing()) {
                 repo.setProcessing();

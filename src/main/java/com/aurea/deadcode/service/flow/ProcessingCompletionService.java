@@ -20,7 +20,7 @@ public class ProcessingCompletionService {
     private RepoRepository repoRepository;
 
     public void performCompletionOperations(OccurrencesSavedMessage message) {
-        Long repoId = message.getId();
+        Long repoId = message.getRepoId();
         AppFileUtils.deleteRepositoryDir(repoId);
         markRepoWithCompletedStatus(repoId);
     }

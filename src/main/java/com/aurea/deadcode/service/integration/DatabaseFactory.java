@@ -68,7 +68,7 @@ class DatabaseFactory {
                 try {
                     dbHolder[0] = Understand.open(filename);
                 } catch (UnderstandException e) {
-                    throw new RuntimeException("Could not open UDB file");
+                    throw new RuntimeException("Could not open UDB file", e);
                 }
                 dbHolder.notifyAll();
             }
