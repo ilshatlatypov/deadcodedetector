@@ -29,7 +29,7 @@ public class UnderstandIntegrationServiceImplTest {
     @Test
     public void deadMethodSearch() throws Exception {
         final String sourcesDirName = "sources/dead-method";
-        final CodeOccurrenceType expectedType = CodeOccurrenceType.METHOD;
+        final CodeOccurrenceType expectedType = CodeOccurrenceType.DEAD_METHOD;
         final String expectedFile = "/DeadMethodTest.java";
         final String expectedName = "notUsedPrivateMethod";
         final int expectedLine = 4;
@@ -57,7 +57,7 @@ public class UnderstandIntegrationServiceImplTest {
     @Test
     public void deadVariableSearch() throws Exception {
         final String sourcesDirName = "sources/dead-variable";
-        final CodeOccurrenceType expectedType = CodeOccurrenceType.VARIABLE;
+        final CodeOccurrenceType expectedType = CodeOccurrenceType.DEAD_VARIABLE;
         final String expectedFile = "/DeadVariableTest.java";
         final String expectedName = "notUsedPrivateVariable";
         final int expectedLine = 5;
@@ -85,7 +85,7 @@ public class UnderstandIntegrationServiceImplTest {
     @Test
     public void deadParameterSearch() throws Exception {
         final String sourcesDirName = "sources/dead-parameter";
-        final CodeOccurrenceType expectedType = CodeOccurrenceType.PARAMETER;
+        final CodeOccurrenceType expectedType = CodeOccurrenceType.DEAD_PARAMETER;
         final String expectedFile = "/DeadParameterTest.java";
         final String expectedName = "notUsedParameter";
         final int expectedLine = 5;

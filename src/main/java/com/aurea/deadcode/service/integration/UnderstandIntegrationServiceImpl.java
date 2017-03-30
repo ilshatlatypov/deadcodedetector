@@ -88,7 +88,7 @@ public class UnderstandIntegrationServiceImpl implements UnderstandIntegrationSe
                 continue;
             }
 
-            CodeOccurrenceType type = CodeOccurrenceType.METHOD;
+            CodeOccurrenceType type = CodeOccurrenceType.DEAD_METHOD;
             String pureMethodName = getPureEntityName(method);
             Reference definitionReference = getDefinitionReference(method);
             occurrences.add(buildCodeOccurrence(type, pureMethodName, definitionReference));
@@ -120,7 +120,7 @@ public class UnderstandIntegrationServiceImpl implements UnderstandIntegrationSe
                         continue;
                     }
 
-                    CodeOccurrenceType type = CodeOccurrenceType.PARAMETER;
+                    CodeOccurrenceType type = CodeOccurrenceType.DEAD_PARAMETER;
                     String paramName = param.name();
                     Reference definitionReference = getDefinitionReference(param);
                     occurrences.add(buildCodeOccurrence(type, paramName, definitionReference));
@@ -138,7 +138,7 @@ public class UnderstandIntegrationServiceImpl implements UnderstandIntegrationSe
                 continue;
             }
 
-            CodeOccurrenceType type = CodeOccurrenceType.VARIABLE;
+            CodeOccurrenceType type = CodeOccurrenceType.DEAD_VARIABLE;
             String pureMemberName = getPureEntityName(var);
             Reference definitionReference = getDefinitionReference(var);
             occurrences.add(buildCodeOccurrence(type, pureMemberName, definitionReference));
