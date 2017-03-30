@@ -1,5 +1,8 @@
 #!/usr/bin/env sh
 
+# Add Scitools Understand to PATH
+export PATH=/Applications/Understand.app/Contents/MacOS:$PATH
+
 ##############################################################################
 ##
 ##  Gradle start up script for UN*X
