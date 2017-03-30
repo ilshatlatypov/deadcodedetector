@@ -16,6 +16,7 @@ public class CodeOccurrence {
     @Column(nullable = false)
     private CodeOccurrenceType type;
 
+    @Column(nullable = false)
     private String file;
 
     @Column(nullable = false)
@@ -48,6 +49,10 @@ public class CodeOccurrence {
 
     public CodeOccurrenceType getType() {
         return type;
+    }
+
+    public void setFile(String file) {
+        this.file = file;
     }
 
     public String getFile() {

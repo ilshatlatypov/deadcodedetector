@@ -4,6 +4,7 @@ import com.aurea.deadcode.model.CodeOccurrence;
 import com.aurea.deadcode.model.GitHubRepo;
 import com.aurea.deadcode.repository.CodeOccurrenceRepository;
 import com.aurea.deadcode.repository.RepoRepository;
+import com.aurea.deadcode.service.AppFileUtils;
 import com.aurea.deadcode.service.flow.message.OccurrencesSavedMessage;
 import com.aurea.deadcode.service.flow.message.UdbFileReadyMessage;
 import com.aurea.deadcode.service.integration.UnderstandIntegrationService;
@@ -37,7 +38,7 @@ public class DeadCodeFinder {
 
         List<CodeOccurrence> deadCodeOccurrences =
                 understandIntegrationService.searchForDeadCodeOccurrences(udbFilePath);
-
+        makeFilePathsRelative(repoId, deadCodeOccurrences);
         updateCodeOccurrences(repoId, deadCodeOccurrences);
 
         LOGGER.debug("Dead code occurrences search finished for repository with id " +  repoId);
@@ -51,5 +52,13 @@ public class DeadCodeFinder {
         deadCodeOccurrences.forEach(o -> o.setRepo(repo));
         codeOccurrenceRepository.deleteCodeOccurrencesByGitHubRepo(repo);
         codeOccurrenceRepository.save(deadCodeOccurrences);
+    }
+
+    private void makeFilePathsRelative(Long repoId, List<CodeOccurrence> deadCodeOccurrences) {
+        int repositoryDirPathLength = AppFileUtils.getSourceCodeDirForRepository(repoId).getAbsolutePath().length();
+        for (CodeOccurrence co : deadCodeOccurrences) {
+            String relativeFilePath = co.getFile().substring(repositoryDirPathLength);
+            co.setFile(relativeFilePath);
+        }
     }
 }
