@@ -4,6 +4,7 @@ import com.aurea.deadcode.dto.GitHubRepoDTO;
 import com.aurea.deadcode.dto.GitHubRepoDetailedDTO;
 import com.aurea.deadcode.exception.ConflictException;
 import com.aurea.deadcode.exception.NotFoundException;
+import com.aurea.deadcode.model.CodeOccurrence;
 import com.aurea.deadcode.service.RepoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -57,6 +58,11 @@ public class RepoRestServiceImpl implements RepoRestService {
     public ResponseEntity<?> removeRepo(@PathVariable Long id) {
         repoService.removeRepo(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @Override
+    public List<CodeOccurrence> getDeadCodeOccurrences(@PathVariable Long id) {
+        return repoService.getDeadCodeOccurrences(id);
     }
 
     @ExceptionHandler({IllegalArgumentException.class})

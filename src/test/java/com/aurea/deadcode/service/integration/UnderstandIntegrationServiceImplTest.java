@@ -10,7 +10,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.io.File;
-import java.util.Set;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
@@ -38,7 +38,7 @@ public class UnderstandIntegrationServiceImplTest {
         String udbFilePath = getUdbFilePath();
 
         File udbFile = understandIntegrationService.createUdbFile(udbFilePath, sourcesPath);
-        Set<CodeOccurrence> occurrences =
+        List<CodeOccurrence> occurrences =
                 understandIntegrationService.searchForDeadCodeOccurrences(udbFile.getAbsolutePath());
 
         assertEquals(1, occurrences.size());
@@ -65,7 +65,7 @@ public class UnderstandIntegrationServiceImplTest {
         String udbFilePath = getUdbFilePath();
 
         File udbFile = understandIntegrationService.createUdbFile(udbFilePath, sourcesPath);
-        Set<CodeOccurrence> occurrences =
+        List<CodeOccurrence> occurrences =
                 understandIntegrationService.searchForDeadCodeOccurrences(udbFile.getAbsolutePath());
 
         assertEquals(1, occurrences.size());
@@ -92,7 +92,7 @@ public class UnderstandIntegrationServiceImplTest {
         String udbFilePath = getUdbFilePath();
 
         File udbFile = understandIntegrationService.createUdbFile(udbFilePath, sourcesPath);
-        Set<CodeOccurrence> occurrences =
+        List<CodeOccurrence> occurrences =
                 understandIntegrationService.searchForDeadCodeOccurrences(udbFile.getAbsolutePath());
 
         assertEquals(1, occurrences.size());

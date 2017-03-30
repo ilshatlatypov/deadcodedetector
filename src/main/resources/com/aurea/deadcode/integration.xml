@@ -47,6 +47,7 @@
 
     <int:service-activator input-channel="udbFileReadyChannel"
                            ref="deadCodeFinder"
+                           method="findAndSave"
                            output-channel="occurrencesSavedChannel"/>
     <bean id="deadCodeFinder" class="com.aurea.deadcode.service.flow.DeadCodeFinder"/>
     <int:channel id="occurrencesSavedChannel"/>

@@ -70,6 +70,10 @@ public class CodeOccurrence {
         return columnTo;
     }
 
+    public void setRepo(GitHubRepo repo) {
+        this.repo = repo;
+    }
+
     @Override
     public String toString() {
         return "CodeOccurrence{" +

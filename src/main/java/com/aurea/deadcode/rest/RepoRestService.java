@@ -2,6 +2,7 @@ package com.aurea.deadcode.rest;
 
 import com.aurea.deadcode.dto.GitHubRepoDTO;
 import com.aurea.deadcode.dto.GitHubRepoDetailedDTO;
+import com.aurea.deadcode.model.CodeOccurrence;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -57,4 +58,12 @@ public interface RepoRestService {
     })
     @RequestMapping(method = RequestMethod.DELETE, path = "/{id}")
     ResponseEntity<?> removeRepo(@PathVariable Long id);
+
+    @ApiOperation(value = "Get list of dead code occurrences")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "List of dead code occurrences"),
+            @ApiResponse(code = 404, message = "Repository not found")
+    })
+    @RequestMapping(method = RequestMethod.GET, path = "/{id}/deadcode-occurrences")
+    List<CodeOccurrence> getDeadCodeOccurrences(@PathVariable Long id);
 }

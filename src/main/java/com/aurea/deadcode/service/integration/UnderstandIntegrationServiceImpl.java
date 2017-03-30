@@ -11,9 +11,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Created by ilshat on 29.03.17.
@@ -63,8 +61,8 @@ public class UnderstandIntegrationServiceImpl implements UnderstandIntegrationSe
         while (in.read(bytes) != -1) {}
     }
 
-    public Set<CodeOccurrence> searchForDeadCodeOccurrences(String udbFilePath) {
-        Set<CodeOccurrence> occurrences = new HashSet<>();
+    public List<CodeOccurrence> searchForDeadCodeOccurrences(String udbFilePath) {
+        List<CodeOccurrence> occurrences = new ArrayList<>();
         Database db = null;
         try {
             db = Understand.open(udbFilePath);

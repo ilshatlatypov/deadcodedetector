@@ -5,14 +5,17 @@ import com.aurea.deadcode.dto.GitHubRepoDTO;
 import com.aurea.deadcode.dto.GitHubRepoDetailedDTO;
 import com.aurea.deadcode.exception.ConflictException;
 import com.aurea.deadcode.exception.NotFoundException;
+import com.aurea.deadcode.model.CodeOccurrence;
 import com.aurea.deadcode.model.GitHubRepo;
+import com.aurea.deadcode.repository.CodeOccurrenceRepository;
 import com.aurea.deadcode.repository.RepoRepository;
-import com.aurea.deadcode.service.integration.GitHubIntegrationService;
 import com.aurea.deadcode.service.flow.RepositoryProcessingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 /**
  * Created by ilshat on 27.03.17.
@@ -24,13 +27,13 @@ public class RepoServiceImpl implements RepoService {
     private RepoRepository repoRepository;
 
     @Autowired
+    private CodeOccurrenceRepository codeOccurrenceRepository;
+
+    @Autowired
     private GitHubRepoAssembler repoAssembler;
 
     @Autowired
     private RepositoryProcessingService processingService;
-
-    @Autowired
-    private GitHubIntegrationService gitHubIntegrationService;
 
     @Override
     public Long addNewRepo(GitHubRepoDTO repoDTO) {
@@ -70,6 +73,16 @@ public class RepoServiceImpl implements RepoService {
             throw new NotFoundException("Could not find repository with id " + id);
         }
         processingService.runProcessing(repo);
+    }
+
+    @Override
+    public List<CodeOccurrence> getDeadCodeOccurrences(Long repoId) {
+        GitHubRepo repo = repoRepository.findOne(repoId);
+        if (repo == null) {
+            throw new NotFoundException("Could not find repository with id " + repoId);
+        }
+        Iterable<CodeOccurrence> occurrences = codeOccurrenceRepository.findAllByRepo(repo);
+        return StreamSupport.stream(occurrences.spliterator(), false).collect(Collectors.toList());
     }
 
     public void stopProcessing(Long id) {
