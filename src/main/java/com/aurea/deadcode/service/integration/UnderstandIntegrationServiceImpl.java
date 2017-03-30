@@ -2,7 +2,9 @@ package com.aurea.deadcode.service.integration;
 
 import com.aurea.deadcode.model.CodeOccurrence;
 import com.aurea.deadcode.model.CodeOccurrenceType;
-import com.scitools.understand.*;
+import com.scitools.understand.Database;
+import com.scitools.understand.Entity;
+import com.scitools.understand.Reference;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
@@ -18,6 +20,8 @@ import java.util.List;
  */
 @Component
 public class UnderstandIntegrationServiceImpl implements UnderstandIntegrationService {
+
+    private DatabaseFactory databaseFactory = new DatabaseFactory();
 
     @Override
     public File createUdbFile(String udbFilePath, String sourcesDirPath) throws FileNotFoundException {
@@ -63,19 +67,10 @@ public class UnderstandIntegrationServiceImpl implements UnderstandIntegrationSe
 
     public List<CodeOccurrence> searchForDeadCodeOccurrences(String udbFilePath) {
         List<CodeOccurrence> occurrences = new ArrayList<>();
-        Database db = null;
-        try {
-            db = Understand.open(udbFilePath);
-            occurrences.addAll(searchForDeadMethods(db));
-            occurrences.addAll(searchForDeadParameters(db));
-            occurrences.addAll(searchForDeadVariables(db));
-        } catch (UnderstandException e) {
-            throw new RuntimeException("Could not open Understand database (UDB file)", e);
-        } finally {
-            if (db != null) {
-                db.close();
-            }
-        }
+        Database db = databaseFactory.getDatabase(udbFilePath);
+        occurrences.addAll(searchForDeadMethods(db));
+        occurrences.addAll(searchForDeadParameters(db));
+        occurrences.addAll(searchForDeadVariables(db));
         return occurrences;
     }
 
