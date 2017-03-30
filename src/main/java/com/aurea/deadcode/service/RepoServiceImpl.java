@@ -13,6 +13,7 @@ import com.aurea.deadcode.service.flow.RepositoryProcessingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -54,9 +55,14 @@ public class RepoServiceImpl implements RepoService {
     }
 
     @Override
+    @Transactional
     public void removeRepo(Long id) {
-        repoMustExist(id);
+        GitHubRepo repo = repoRepository.findOne(id);
+        if (repo == null) {
+            throw new NotFoundException("Could not find repository with id " + id);
+        }
         // TODO if processing - stop it
+        codeOccurrenceRepository.deleteCodeOccurrencesByGitHubRepo(repo);
         repoRepository.delete(id);
     }
 
