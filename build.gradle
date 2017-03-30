@@ -37,5 +37,5 @@ dependencies {
 
     compile('org.eclipse.jgit:org.eclipse.jgit:4.6.1.201703071140-r')
 
-    compile files('/Applications/Understand.app/Contents/MacOS/Java/com.scitools.understand.plugin_1.1.3.jar')
+    compile files('lib/com.scitools.understand.plugin_1.1.3.jar')
 }
