@@ -20,7 +20,7 @@ import static org.junit.Assert.assertTrue;
  * Created by ilshat on 29.03.17.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = UnderstandIntegrationServiceImpl.class)
+@ContextConfiguration(locations = "classpath:/com/aurea/deadcode/understand-service-config.xml")
 public class UnderstandIntegrationServiceImplTest {
 
     @Autowired

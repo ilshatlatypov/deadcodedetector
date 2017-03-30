@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+    <bean id="understandIntegrationServiceImpl" class="com.aurea.deadcode.service.integration.UnderstandIntegrationServiceImpl">
+        <property name="algorithms">
+            <set>
+                <bean class="com.aurea.deadcode.service.integration.algorithm.DeadMethodAlgorithm"/>
+                <bean class="com.aurea.deadcode.service.integration.algorithm.DeadParameterAlgorithm"/>
+                <bean class="com.aurea.deadcode.service.integration.algorithm.DeadVariableAlgorithm"/>
+            </set>
+        </property>
+    </bean>
+</beans>
