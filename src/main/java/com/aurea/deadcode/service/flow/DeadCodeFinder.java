@@ -4,7 +4,7 @@ import com.aurea.deadcode.model.CodeOccurrence;
 import com.aurea.deadcode.model.GitHubRepo;
 import com.aurea.deadcode.repository.CodeOccurrenceRepository;
 import com.aurea.deadcode.repository.RepoRepository;
-import com.aurea.deadcode.service.AppFileUtils;
+import com.aurea.deadcode.service.utils.AppFileUtils;
 import com.aurea.deadcode.service.flow.message.OccurrencesSavedMessage;
 import com.aurea.deadcode.service.flow.message.UdbFileReadyMessage;
 import com.aurea.deadcode.service.integration.UnderstandIntegrationService;

@@ -2,7 +2,7 @@ package com.aurea.deadcode.service.flow;
 
 import com.aurea.deadcode.model.GitHubRepo;
 import com.aurea.deadcode.repository.RepoRepository;
-import com.aurea.deadcode.service.AppFileUtils;
+import com.aurea.deadcode.service.utils.AppFileUtils;
 import com.aurea.deadcode.service.flow.message.OccurrencesSavedMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

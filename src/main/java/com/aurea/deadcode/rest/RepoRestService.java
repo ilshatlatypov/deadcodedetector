@@ -45,7 +45,7 @@ public interface RepoRestService {
 
     @ApiOperation(value = "Remove repository")
     @ApiResponses({
-            @ApiResponse(code = 204, message = "Repository removed"), // TODO or 202 ?
+            @ApiResponse(code = 204, message = "Repository removed"),
             @ApiResponse(code = 404, message = "Repository not found")
     })
     @RequestMapping(method = RequestMethod.DELETE, path = "/{id}")

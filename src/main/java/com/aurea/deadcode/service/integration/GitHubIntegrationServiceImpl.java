@@ -1,6 +1,6 @@
 package com.aurea.deadcode.service.integration;
 
-import com.aurea.deadcode.service.AppFileUtils;
+import com.aurea.deadcode.service.utils.AppFileUtils;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.slf4j.Logger;
@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.File;
 
-import static com.aurea.deadcode.service.AppFileUtils.createDir;
+import static com.aurea.deadcode.service.utils.AppFileUtils.createDir;
 
 /**
  * Created by ilshat on 28.03.17.
@@ -37,7 +37,7 @@ public class GitHubIntegrationServiceImpl implements GitHubIntegrationService {
                     .call();
         } catch (GitAPIException e) {
             String message = String.format("Could not clone repository %s to directory %s", uri, dir.getAbsolutePath());
-            throw new RuntimeException(message);
+            throw new GitHubIntegrationException(message, e);
         }
     }
 }

@@ -1,4 +1,4 @@
-package com.aurea.deadcode.service;
+package com.aurea.deadcode.service.utils;
 
 import org.apache.commons.io.FileUtils;
 

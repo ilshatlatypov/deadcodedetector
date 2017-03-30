@@ -1,6 +1,6 @@
 package com.aurea.deadcode.service.flow;
 
-import com.aurea.deadcode.service.AppFileUtils;
+import com.aurea.deadcode.service.utils.AppFileUtils;
 import com.aurea.deadcode.service.flow.message.SourceCodeReadyMessage;
 import com.aurea.deadcode.service.flow.message.UdbFileReadyMessage;
 import com.aurea.deadcode.service.integration.UnderstandIntegrationService;
