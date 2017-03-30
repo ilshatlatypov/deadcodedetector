@@ -2,6 +2,7 @@ package com.aurea.deadcode.rest;
 
 import com.aurea.deadcode.dto.GitHubRepoDTO;
 import com.aurea.deadcode.dto.GitHubRepoDetailedDTO;
+import com.aurea.deadcode.exception.CantRemoveRepositoryException;
 import com.aurea.deadcode.exception.ConflictException;
 import com.aurea.deadcode.exception.NotFoundException;
 import com.aurea.deadcode.model.CodeOccurrence;
@@ -60,7 +61,7 @@ public class RepoRestServiceImpl implements RepoRestService {
         return repoService.getDeadCodeOccurrences(id);
     }
 
-    @ExceptionHandler({IllegalArgumentException.class})
+    @ExceptionHandler({IllegalArgumentException.class, CantRemoveRepositoryException.class})
     void handleBadRequests(HttpServletResponse response) throws IOException {
         response.sendError(HttpStatus.BAD_REQUEST.value());
     }

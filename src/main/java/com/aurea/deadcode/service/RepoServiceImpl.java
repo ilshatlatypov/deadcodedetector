@@ -3,6 +3,7 @@ package com.aurea.deadcode.service;
 import com.aurea.deadcode.dto.GitHubRepoAssembler;
 import com.aurea.deadcode.dto.GitHubRepoDTO;
 import com.aurea.deadcode.dto.GitHubRepoDetailedDTO;
+import com.aurea.deadcode.exception.CantRemoveRepositoryException;
 import com.aurea.deadcode.exception.ConflictException;
 import com.aurea.deadcode.exception.NotFoundException;
 import com.aurea.deadcode.model.CodeOccurrence;
@@ -61,7 +62,11 @@ public class RepoServiceImpl implements RepoService {
         if (repo == null) {
             throw new NotFoundException("Could not find repository with id " + id);
         }
-        // TODO if processing - stop it
+
+        if (repo.isProcessing()) {
+            String message = String.format("Repository with id %d is currently processing", id);
+            throw new CantRemoveRepositoryException(message);
+        }
         codeOccurrenceRepository.deleteCodeOccurrencesByGitHubRepo(repo);
         repoRepository.delete(id);
     }
