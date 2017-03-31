@@ -67,7 +67,7 @@ public class RepoServiceImpl implements RepoService {
             String message = String.format("Repository with id %d is currently processing", id);
             throw new CantRemoveRepositoryException(message);
         }
-        codeOccurrenceRepository.deleteCodeOccurrencesByGitHubRepo(repo);
+        codeOccurrenceRepository.deleteCodeOccurrencesByRepo(repo);
         repoRepository.delete(id);
     }
 

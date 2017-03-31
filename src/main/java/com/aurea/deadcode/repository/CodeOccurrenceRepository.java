@@ -20,5 +20,5 @@ public interface CodeOccurrenceRepository extends PagingAndSortingRepository<Cod
     @Modifying
     @Transactional
     @Query("delete from CodeOccurrence co where co.repo = ?1")
-    void deleteCodeOccurrencesByGitHubRepo(GitHubRepo repo);
+    void deleteCodeOccurrencesByRepo(GitHubRepo repo);
 }

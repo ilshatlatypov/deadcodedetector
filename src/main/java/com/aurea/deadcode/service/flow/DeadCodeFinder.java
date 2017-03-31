@@ -12,7 +12,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.transaction.Transactional;
 import java.util.List;
 
 /**
@@ -44,12 +43,11 @@ public class DeadCodeFinder {
         return new OccurrencesSavedMessage(repoId);
     }
 
-    @Transactional
-    public void updateCodeOccurrences(Long repoId, List<CodeOccurrence> deadCodeOccurrences) {
+    private void updateCodeOccurrences(Long repoId, List<CodeOccurrence> deadCodeOccurrences) {
         // there is a way to optimizations by calculating diff and committing only that occurrences
         GitHubRepo repo = repoRepository.findOne(repoId);
         deadCodeOccurrences.forEach(o -> o.setRepo(repo));
-        codeOccurrenceRepository.deleteCodeOccurrencesByGitHubRepo(repo);
+        codeOccurrenceRepository.deleteCodeOccurrencesByRepo(repo);
         codeOccurrenceRepository.save(deadCodeOccurrences);
     }
 }
