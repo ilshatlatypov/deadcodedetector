@@ -12,13 +12,15 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URI;
-import java.util.List;
 
 /**
  * Created by ilshat on 28.03.17.
@@ -41,8 +43,8 @@ public class RepoRestServiceImpl implements RepoRestService {
                 .buildAndExpand(addedRepoId).toUri();
     }
 
-    public List<GitHubRepoDetailedDTO> listRepos() {
-        return repoService.listRepos();
+    public Page<GitHubRepoDetailedDTO> listRepos(Pageable pageable) {
+        return repoService.listRepos(pageable);
     }
 
     public ResponseEntity<?> startProcessing(@PathVariable Long id) {

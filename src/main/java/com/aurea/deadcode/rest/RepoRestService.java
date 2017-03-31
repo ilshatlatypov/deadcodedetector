@@ -12,8 +12,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 /**
  * Created by ilshat on 27.03.17.
  */
@@ -35,7 +33,7 @@ public interface RepoRestService {
             @ApiResponse(code = 200, message = "List of repositories"),
     })
     @RequestMapping(method = RequestMethod.GET)
-    @ResponseBody List<GitHubRepoDetailedDTO> listRepos();
+    @ResponseBody Page<GitHubRepoDetailedDTO> listRepos(Pageable pageable);
 
     @ApiOperation(value = "Start dead code detection processing for a repository")
     @ApiResponses({

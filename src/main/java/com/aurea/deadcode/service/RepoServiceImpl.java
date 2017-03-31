@@ -18,9 +18,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 import javax.transaction.Transactional;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 /**
  * Created by ilshat on 27.03.17.
@@ -77,11 +74,9 @@ public class RepoServiceImpl implements RepoService {
     }
 
     @Override
-    public List<GitHubRepoDetailedDTO> listRepos() {
-        Iterable<GitHubRepo> repos = repoRepository.findAll();
-        return StreamSupport.stream(repos.spliterator(), false)
-                .map(toDetailedDtoConverter::convert)
-                .collect(Collectors.toList());
+    public Page<GitHubRepoDetailedDTO> listRepos(Pageable pageable) {
+        Page<GitHubRepo> page = repoRepository.findAll(pageable);
+        return page.map(toDetailedDtoConverter);
     }
 
     @Override
