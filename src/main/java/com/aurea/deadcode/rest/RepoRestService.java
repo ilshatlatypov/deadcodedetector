@@ -7,6 +7,8 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -57,5 +59,5 @@ public interface RepoRestService {
             @ApiResponse(code = 404, message = "Repository not found")
     })
     @RequestMapping(method = RequestMethod.GET, path = "/{id}/deadcode-occurrences")
-    List<CodeOccurrence> getDeadCodeOccurrences(@PathVariable Long id);
+    Page<CodeOccurrence> getDeadCodeOccurrences(@PathVariable Long id, Pageable pageable);
 }

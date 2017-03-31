@@ -12,12 +12,12 @@ import com.aurea.deadcode.repository.CodeOccurrenceRepository;
 import com.aurea.deadcode.repository.RepoRepository;
 import com.aurea.deadcode.service.flow.RepositoryProcessingService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 /**
  * Created by ilshat on 27.03.17.
@@ -87,12 +87,11 @@ public class RepoServiceImpl implements RepoService {
     }
 
     @Override
-    public List<CodeOccurrence> getDeadCodeOccurrences(Long repoId) {
+    public Page<CodeOccurrence> getDeadCodeOccurrences(Long repoId, Pageable pageable) {
         GitHubRepo repo = repoRepository.findOne(repoId);
         if (repo == null) {
             throw new NotFoundException("Could not find repository with id " + repoId);
         }
-        Iterable<CodeOccurrence> occurrences = codeOccurrenceRepository.findAllByRepo(repo);
-        return StreamSupport.stream(occurrences.spliterator(), false).collect(Collectors.toList());
+        return codeOccurrenceRepository.findAllByRepo(repo, pageable);
     }
 }

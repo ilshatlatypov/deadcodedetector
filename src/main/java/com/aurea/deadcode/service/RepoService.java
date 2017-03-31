@@ -3,6 +3,8 @@ package com.aurea.deadcode.service;
 import com.aurea.deadcode.dto.GitHubRepoDetailedDTO;
 import com.aurea.deadcode.dto.GitHubRepoDTO;
 import com.aurea.deadcode.model.CodeOccurrence;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -19,5 +21,5 @@ public interface RepoService {
 
     void startProcessing(Long id);
 
-    List<CodeOccurrence> getDeadCodeOccurrences(Long repoId);
+    Page<CodeOccurrence> getDeadCodeOccurrences(Long repoId, Pageable pageable);
 }

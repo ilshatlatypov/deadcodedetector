@@ -8,12 +8,11 @@ import com.aurea.deadcode.exception.NotFoundException;
 import com.aurea.deadcode.model.CodeOccurrence;
 import com.aurea.deadcode.service.RepoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.servlet.http.HttpServletResponse;
@@ -57,8 +56,8 @@ public class RepoRestServiceImpl implements RepoRestService {
     }
 
     @Override
-    public List<CodeOccurrence> getDeadCodeOccurrences(@PathVariable Long id) {
-        return repoService.getDeadCodeOccurrences(id);
+    public Page<CodeOccurrence> getDeadCodeOccurrences(@PathVariable Long id, Pageable pageable) {
+        return repoService.getDeadCodeOccurrences(id, pageable);
     }
 
     @ExceptionHandler({IllegalArgumentException.class, CantRemoveRepositoryException.class})
