@@ -27,17 +27,16 @@ public class RepoServiceImpl implements RepoService {
 
     @Autowired
     private RepoRepository repoRepository;
-
     @Autowired
     private CodeOccurrenceRepository codeOccurrenceRepository;
-
-    @Autowired
-    private RepositoryProcessingService processingService;
 
     @Autowired
     private RepoFromDtoConverter fromDtoConverter;
     @Autowired
     private RepoToDetailedDtoConverter toDetailedDtoConverter;
+
+    @Autowired
+    private RepositoryProcessingService processingService;
 
     @Override
     public Long addNewRepo(GitHubRepoDTO repoDTO) {
@@ -61,16 +60,17 @@ public class RepoServiceImpl implements RepoService {
     @Transactional
     public void removeRepo(Long id) {
         GitHubRepo repo = repoRepository.findOne(id);
-        if (repo == null) {
-            throw new NotFoundException("Could not find repository with id " + id);
-        }
-
-        if (repo.isProcessing()) {
-            String message = String.format("Repository with id %d is currently processing", id);
-            throw new CantRemoveRepositoryException(message);
-        }
+        checkNotNullOrNotFoundEx(repo, id);
+        checkNotProcessing(repo);
         codeOccurrenceRepository.deleteCodeOccurrencesByRepo(repo);
         repoRepository.delete(id);
+    }
+
+    private void checkNotProcessing(GitHubRepo repo) {
+        if (repo.isProcessing()) {
+            String message = String.format("Repository with id %d is currently processing", repo.getId());
+            throw new CantRemoveRepositoryException(message);
+        }
     }
 
     @Override
@@ -82,18 +82,20 @@ public class RepoServiceImpl implements RepoService {
     @Override
     public void startProcessing(Long id) {
         GitHubRepo repo = repoRepository.findOne(id);
-        if (repo == null) {
-            throw new NotFoundException("Could not find repository with id " + id);
-        }
+        checkNotNullOrNotFoundEx(repo, id);
         processingService.runProcessing(repo);
     }
 
     @Override
     public Page<CodeOccurrence> getDeadCodeOccurrences(Long repoId, Pageable pageable) {
         GitHubRepo repo = repoRepository.findOne(repoId);
+        checkNotNullOrNotFoundEx(repo, repoId);
+        return codeOccurrenceRepository.findAllByRepo(repo, pageable);
+    }
+
+    private void checkNotNullOrNotFoundEx(GitHubRepo repo, Long repoId) {
         if (repo == null) {
             throw new NotFoundException("Could not find repository with id " + repoId);
         }
-        return codeOccurrenceRepository.findAllByRepo(repo, pageable);
     }
 }
