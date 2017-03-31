@@ -30,9 +30,9 @@ public class SwaggerConfig {
     private ApiInfo apiInfo() {
         ApiInfo apiInfo = new ApiInfo(
                 "Dead Code Detector",
-                "Some custom description of API.",
-                "API TOS",
-                "Terms of service",
+                "API for Dead Code detection service for GitHub repositories.",
+                "0.0.1",
+                null,
                 new Contact("Ilshat Latypov", null, "ilshat.latypov@aurea.com"),
                 null,
                 null);
