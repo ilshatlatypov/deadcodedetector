@@ -1,8 +1,9 @@
 package com.aurea.deadcode.service;
 
-import com.aurea.deadcode.dto.GitHubRepoAssembler;
 import com.aurea.deadcode.dto.GitHubRepoDTO;
 import com.aurea.deadcode.dto.GitHubRepoDetailedDTO;
+import com.aurea.deadcode.dto.RepoFromDtoConverter;
+import com.aurea.deadcode.dto.RepoToDetailedDtoConverter;
 import com.aurea.deadcode.exception.CantRemoveRepositoryException;
 import com.aurea.deadcode.exception.ConflictException;
 import com.aurea.deadcode.exception.NotFoundException;
@@ -18,6 +19,8 @@ import org.springframework.stereotype.Component;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 /**
  * Created by ilshat on 27.03.17.
@@ -32,14 +35,16 @@ public class RepoServiceImpl implements RepoService {
     private CodeOccurrenceRepository codeOccurrenceRepository;
 
     @Autowired
-    private GitHubRepoAssembler repoAssembler;
+    private RepositoryProcessingService processingService;
 
     @Autowired
-    private RepositoryProcessingService processingService;
+    private RepoFromDtoConverter fromDtoConverter;
+    @Autowired
+    private RepoToDetailedDtoConverter toDetailedDtoConverter;
 
     @Override
     public Long addNewRepo(GitHubRepoDTO repoDTO) {
-        GitHubRepo repo = repoAssembler.fromDTO(repoDTO);
+        GitHubRepo repo = fromDtoConverter.convert(repoDTO);
         repoUrlMustBeUnique(repo);
         GitHubRepo savedRepo = repoRepository.save(repo);
         processingService.runProcessing(savedRepo);
@@ -74,7 +79,9 @@ public class RepoServiceImpl implements RepoService {
     @Override
     public List<GitHubRepoDetailedDTO> listRepos() {
         Iterable<GitHubRepo> repos = repoRepository.findAll();
-        return repoAssembler.toListItemDTO(repos);
+        return StreamSupport.stream(repos.spliterator(), false)
+                .map(toDetailedDtoConverter::convert)
+                .collect(Collectors.toList());
     }
 
     @Override
