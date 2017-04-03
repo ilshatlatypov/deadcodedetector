@@ -3,10 +3,7 @@ package com.aurea.deadcode.rest;
 import com.aurea.deadcode.dto.GitHubRepoDTO;
 import com.aurea.deadcode.dto.GitHubRepoDetailedDTO;
 import com.aurea.deadcode.model.CodeOccurrence;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -32,6 +29,11 @@ public interface RepoRestService {
     @ApiResponses({
             @ApiResponse(code = 200, message = "List of repositories"),
     })
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "page", dataType = "int", paramType = "query", value = "Page number"),
+            @ApiImplicitParam(name = "size", dataType = "int", paramType = "query",
+                    value = "Number of records per page")
+    })
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody Page<GitHubRepoDetailedDTO> listRepos(Pageable pageable);
 
@@ -55,6 +57,11 @@ public interface RepoRestService {
     @ApiResponses({
             @ApiResponse(code = 200, message = "List of dead code occurrences"),
             @ApiResponse(code = 404, message = "Repository not found")
+    })
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "page", dataType = "int", paramType = "query", value = "Page number"),
+            @ApiImplicitParam(name = "size", dataType = "int", paramType = "query",
+                    value = "Number of records per page")
     })
     @RequestMapping(method = RequestMethod.GET, path = "/{id}/deadcode-occurrences")
     Page<CodeOccurrence> getDeadCodeOccurrences(@PathVariable Long id, Pageable pageable);
